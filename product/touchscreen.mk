@@ -1,6 +1,6 @@
 # Firmware
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/touch/ft_fw.bin:system/etc/firmware/ft_fw.bin
+#PRODUCT_COPY_FILES += \
+#    $(LOCAL_PATH)/touch/ft_fw.bin:system/etc/firmware/ft_fw.bin
 
 # Permissions
 PRODUCT_COPY_FILES += \
