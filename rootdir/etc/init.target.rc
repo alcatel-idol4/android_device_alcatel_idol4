@@ -1,41 +1,470 @@
-# Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are
-# met:
-#     * Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above
-#       copyright notice, this list of conditions and the following
-#       disclaimer in the documentation and/or other materials provided
-#       with the distribution.
-#     * Neither the name of The Linux Foundation nor the names of its
-#       contributors may be used to endorse or promote products derived
-#       from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
-# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
-# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-#
 
 on early-init
     mkdir /firmware 0771 system system
     mkdir /system 0777 root root
     symlink /data/tombstones /tombstones
-    mkdir /tctpersist 0771 root root
-    mkdir /persist 0771 system system
+    mkdir /dsp 0771 media media
+    mkdir /tctpersist 0771 system system
+
+on post-fs
+    export LD_PRELOAD libNimsWrap.so
+    #bootprof add by gtguo for defect 1398221
+    chown system system /proc/bootprof
 
 on fs
+    #bootprof add by gtguo for defect 1398221
+    write /proc/bootprof "init.target.rc:Mount_START"
+
     wait /dev/block/bootdevice
-    write /proc/bootprof "init.target.rc:fstab_mount"
+
     mount_all fstab.qcom
-    write /proc/bootprof "init.target.rc:fstab_mount_end"
+
+    # Keeping following partitions outside fstab file. As user may not have
+    # these partition flashed on the device. Failure to mount any partition in fstab file
+    # results in failure to launch late-start class.
+
+#bootprof add by gtguo for defect 1398221
+    write /proc/bootprof "init.target.rc:Mount_END"
+
+on post-fs-data
+    write /proc/bootprof "init.target.rc:on_post_fs_data"
+    exec /system/bin/tune2fs -O has_journal -u 10010 -r 4096 /dev/block/dm-1
+    mkdir /data/tombstones 0775 system system
+    mkdir /tombstones/modem 0775 system system
+    mkdir /tombstones/lpass 0775 system system
+    mkdir /tombstones/wcnss 0775 system system
+    mkdir /tombstones/dsps 0775 system system
+    mkdir /persist/data/sfs 0700 system system
+    mkdir /persist/data/tz 0700 system system
+    mkdir /data/misc/dts 0770 media audio
+    mkdir /data/misc/audio_pp 0771 media audio
+
+    #add begin by zhengyang.ma, Task-1018467
+    mkdir /data/wl 0777 system system
+    #add end by zhengyang.ma
+
+    #read/write calltimesaver after factory reset PR:1067830
+    chmod 0666 /tctpersist/phone/calltimesaver
+
+    mkdir /data/jrdrecord_tmp 0766 system system
+    write /proc/bootprof "init.target.rc:on_post_fs_data_end"
+
+#start camera server as daemon
+service qcamerasvr /system/bin/mm-qcamera-daemon
+    class late_start
+    user camera
+    group camera system inet input graphics
+
+on init
+   write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
+
+#add for ALM49966 by 93709
+on property:sys.tct.screenunlock=true
+   restorecon_recursive /data/local/tmp/magickey
+
+#enable zram
+on property:ro.config.zram=true
+    swapon_all fstab.qcom
+    write /proc/sys/vm/swappiness 60
+
+service qfp-daemon /system/bin/qfp-daemon
+   class late_start
+   user system
+   group system drmrpc
+
+# Allow usb charging to be disabled peristently
+on property:persist.usb.chgdisabled=1
+    write /sys/class/power_supply/battery/charging_enabled 0
+
+on property:persist.usb.chgdisabled=0
+    write /sys/class/power_supply/battery/charging_enabled 1
+
+service qrngd /system/bin/qrngd -f
+   class main
+   user root
+   group root
+
+service qrngp /system/bin/qrngp -f
+   class main
+   user root
+   group root
+   oneshot
+   disabled
+
+on property:sys.boot_completed=1
+   start qrngp
+   start smcd
+
+service qseecomd /system/bin/qseecomd
+   class core
+   user root
+   group root
+
+#service aostlmd /system/bin/aostlmd
+#   class late_start
+#   user system
+#   group system net_raw
+
+service perfd /system/vendor/bin/perfd
+   class main
+   user root
+   disabled
+
+service seempd /system/bin/seempd
+   class late_start
+   user system
+   group system
+   socket seempdw dgram 0666 system system
+   oneshot
+
+service thermal-engine /system/vendor/bin/thermal-engine
+   class main
+   user root
+   socket thermal-send-client stream 0666 system system
+#[FEATURE]-Add-BEGIN by TCTSH.jhyu, 10/23/2016, defect-3573338
+   socket thermal-recv-client stream 0666 system system
+#[FEATURE]-Add-END by TCTSH.jhyu, 10/23/2016, defect-3573338
+   socket thermal-recv-passive-client stream 0666 system system
+   group root
+
+service time_daemon /system/bin/time_daemon
+# [PLATFORM]-Add-BEGIN by TCTCD.liyue, start time-daemon after mount userdata, Defect-1048043, 2015/12/7
+   class late_start
+# [PLATFORM]-Add-END by TCTCD.liyue
+   user root
+   group root
+
+service audiod /system/bin/audiod
+   class late_start
+   user system
+   group system
+
+#JRD SYS START to start powerup_reason after time_daemon start
+service powerup_reason /system/bin/powerup_reason
+#modify begin by stephen.wu for powerup_reason daemon recording power off charging PR:1066454
+   #class late_start
+#modify end by stephen.wu
+    seclabel u:r:powerup_reason:s0
+    oneshot
+#JRD SYS END
+
+on boot
+    start rmt_storage
+    insmod /system/lib/modules/adsprpc.ko
+# access permission for secure touch
+    chmod 0660 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
+    chmod 0440 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
+    chmod 0660 /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
+    chmod 0440 /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
+    chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
+    chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
+    chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
+    chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
+    write /proc/sys/kernel/sched_boost 1
+
+    #Add-BEGIN by TCTNB.(zhengyang.ma), 2015/10/27,PR-665690, Camera LED
+    chown system system /sys/class/leds/led_torch/brightness
+    chown system system /sys/class/leds/led:torch_0/brightness
+    chown system system /sys/class/leds/led:torch_1/brightness
+    chown system system /sys/class/leds/led:switch/brightness
+    chmod 0666 /sys/class/leds/led_torch/brightness
+    #Add-END by TCTNB.(zhengyang.ma)
+    #Add-BEGIN by TCTNB.(zhengyang.ma), 2015/12/08,PR-1069672, Charge current
+    chown system system /sys/class/power_supply/bms/update_now
+    #Add-END by TCTNB.(zhengyang.ma)
+
+    #Add-BEGIN by TCTNB.YQJ, 2015/11/17,PR-526559
+    chown system system /sys/class/tp_device/tp_gesture/doubleclick_enable
+    chown system system /sys/class/tp_device/tp_gesture/gesture_data
+    chown system system /sys/class/tp_device/tp_gesture/gesture_enable
+    chown system system /sys/class/tp_device/tp_glove/glove_enable
+    chown system system /sys/class/tp_device/tp_hover/hover_enable
+    chown system system /sys/class/tp_device/tp_sensitivity/cover_enable
+    chown system system /sys/class/sensors/virtual-proximity/enable
+    chown system system /sys/class/sensors/virtual-proximity/poll_delay
+    chown system system /sys/class/tp_device/tp_vr/vr_enable
+    chown system system /sys/class/tp_device/tp_debug/tp_log_switch
+    #Add-END by TCTNB.YQJ
+
+    #Task735408-ADD begin Author:su shangpeng Email:shangpeng.su@tcl.com Date:2015.11.09
+    chown system system /sys/class/leds/red/blink
+    chmod 0666 /sys/class/leds/red/blink
+    #Task735408-END
+
+    #Add-BEGIN by TCTNB.(shishun.liu), 2016/02/18,ALM-1604027, Efuse check
+    chmod 0644 /dev/oemfuse
+    #Add-END by TCTNB.(shishun.liu)
+
+service wcnss-service /system/bin/wcnss_service
+    class main
+    user system
+    group system wifi radio
+    oneshot
+
+service imsqmidaemon /system/bin/imsqmidaemon
+    class main
+    user system
+    socket ims_qmid stream 0660 system radio
+    group radio net_raw log diag
+
+service imsdatadaemon /system/bin/imsdatadaemon
+    class main
+    user system
+    socket ims_datad stream 0660 system radio
+    group system wifi radio inet net_raw log diag net_admin
+    disabled
+
+on property:sys.ims.QMI_DAEMON_STATUS=1
+    start imsdatadaemon
+
+on property:ro.kernel.nfc.enable=true
+    setprop ro.nfc.port "I2C"
+    chmod 0660 /dev/pn544
+    chown nfc nfc /dev/pn544
+    mkdir /data/nfc
+    chmod 0777 /data/nfc
+
+service ims_rtp_daemon /system/bin/ims_rtp_daemon
+   class main
+   user system
+   socket ims_rtpd stream 0660 system radio
+   group radio net_raw diag diag inet log
+   disabled
+
+service imscmservice /system/bin/imscmservice
+   class main
+   user system
+   group radio net_raw diag diag log
+   disabled
+
+on property:sys.ims.DATA_DAEMON_STATUS=1
+    start ims_rtp_daemon
+    start imscmservice
+
+#[FEATURE]-Mod-BEGIN by TCTNB.CY, task-707162, 2015/11/23, enable AD
+service ppd /system/vendor/bin/mm-pp-daemon -a
+    class late_start
+    disabled
+    user system
+    socket pps stream 0660 system system
+    group system graphics
+#[FEATURE]-Mod-END by TCTNB.CY, 2015/11/23
+
+#yuguan.chen add for wlan test mode begin
+#Start wifi test mode certification services
+#Change files permission to write .etc
+on property:sys.boot_completed=1
+    chmod 0777 /data/wl/rx.sh
+    chmod 0777 /data/wl/rxn.sh
+    chmod 0777 /data/wl/wavegenerator.sh
+    chmod 0777 /data/wl/rxstop.sh
+    chmod 0777 /data/wl/txstop.sh
+    chmod 0777 /data/wl/txbg.sh
+    chmod 0777 /data/wl/txn.sh
+    chmod 0777 /data/wl/RxOn.sh
+    chmod 0777 /data/wl/stop.sh
+    chmod 0777 /data/wl/RxReconnect.sh
+    chmod 0777 /data/wl/txunmod.sh
+    chmod 0777 /data/wl/wlarm
+    chmod 0777 /data/wl
+
+service wifitest /system/bin/sh /system/etc/init.qcom.wifitest.sh
+    disabled
+    oneshot
+
+service wifitesttx /system/bin/sh /system/etc/init.qcom.wifitesttx.sh
+    disabled
+    oneshot
+
+service wifitestwg /system/bin/sh /system/etc/init.qcom.wifitestwg.sh
+    disabled
+    oneshot
+
+service wifitesttxn /system/bin/sh /system/etc/init.qcom.wifitesttxn.sh
+    disabled
+    oneshot
+
+service wifitestRxOn /system/bin/sh /system/etc/init.qcom.wifitestRxOn.sh
+    disabled
+    oneshot
+
+service RxReconnect /system/bin/sh /system/etc/init.qcom.RxRconnect.sh
+    disabled
+    oneshot
+
+service wifiUnmodTst /system/bin/sh /system/etc/init.qcom.wifitesttxunmod.sh
+    disabled
+    oneshot
+
+service RxStop /system/bin/sh /system/etc/init.qcom.wifitestRxStop.sh
+    disabled
+    oneshot
+
+service txbg_fixed /system/bin/sh /system/etc/init.qcom.wifitesttxbg_fixed.sh
+    disabled
+    oneshot
+
+service TxStop /system/bin/sh /system/etc/init.qcom.wifitestTxStop.sh
+    disabled
+    oneshot
+#[BUGFIX]-Add-END by TCTNB.Chen Ji
+#yuguan.chen add for wlan test mode end
+
+on property:init.svc.surfaceflinger=stopped
+    stop ppd
+
+on property:init.svc.surfaceflinger=running
+    start ppd
+
+#[BUGFIX-1176914]-Add-BEGIN by TCTNB.Hanling Zhang
+on property:init.svc.surfaceflinger=restarting
+    stop ppd
+on property:init.svc.zygote=stopped
+    stop ppd
+on property:init.svc.zygote=restarting
+    stop ppd
+on property:init.svc.zygote=running
+    start ppd
+#[BUGFIX-1176914]-Add-END by TCTNB.Hanling Zhang
+#[FEATURE]-Add-BEGIN by TCTNB.93391,11/30/2015,ALM927723,USB Driver Auto Install
+on post-fs
+    write /sys/class/android_usb/android0/f_mass_storage/rom/file /system/etc/USBDriver.iso
+#[FEATURE]-Add-END by TCTNB.93391,11/30/2015,ALM927723,USB Driver Auto Install
+
+#[FEATURE]-ADD-BEGIN by TCTNB.93391, 2014/11/13,728893,change simlock remain times to tctpersist
+on post-fs
+    mkdir /tctpersist/simlock 0771 system radio
+# [FEATURE]-ADD-END by TCTNB.93391, 2014/11/13,728893,change simlock remain times to tctpersist
+
+on charger
+    wait /dev/block/bootdevice/by-name/system
+    mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
+
+    #[FEATURE]-ADD-BEGIN by TCTNB(heng.chen),2016/1/25,Task-1275329-ALM,mount cache for charging logs
+    wait /dev/block/bootdevice/by-name/cache
+    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
+    #[FEATURE]-ADD-END by TCTNB(heng.chen),2016/1/25,Task-1275329-ALM
+
+#[BUGFIX]-Add-START by TCTNB.lijiang task-1000062 2015/11/30
+    wait /dev/block/bootdevice/by-name/persist
+    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
+#[BUGFIX]-Add-END by TCTNB.lijiang
+    load_all_props
+    start qcom-post-boot
+    setprop persist.sys.usb.config default,mass_storage,diag,serial_smd,serial_tty,adb
+    mkdir /dev/usb-ffs 0770 shell shell
+    mkdir /dev/usb-ffs/adb 0770 shell shell
+    mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
+    write /sys/class/android_usb/android0/f_ffs/aliases adb
+    start hvdcp_opti
+    start smcd
+
+service dts_configurator /system/bin/dts_configurator
+    class late_start
+    user system
+    group media audio
+    oneshot
+#for tct after sale mode log task1167051
+service tct_as_log /system/bin/sh /system/etc/tct_as_log.sh
+    disabled
+    oneshot
+
+on property:ro.boot.mode=aftersale
+    start smcd
+
+
+service dtseagleservice /system/bin/dts_eagle_service
+    class late_start
+    user system
+    group audio media
+    disabled
+
+service adsprpcd /system/bin/adsprpcd
+    class main
+    user media
+    group media
+
+service hvdcp_opti /system/bin/hvdcp_opti
+    class main
+    user root
+    group root
+
+on property:init.svc.dts_configurator=stopped
+    start dtseagleservice
+
+service per_mgr /system/bin/pm-service
+    class core
+    user system
+    group system net_raw
+
+service energy-awareness /system/bin/energy-awareness
+    class main
+    user root
+    group system
+    oneshot
+    disabled
+
+#[FEATURE]-ADD-BEGIN by TCTNB(heng.chen),11/13/2015,Task-871732-ALM
+service smcd /system/bin/smcd
+    class main
+    disabled
+    oneshot
+    group system system
+    socket smcd seqpacket 0660 system system
+#[FEATURE]-ADD-END by TCTNB(heng.chen),11/13/2015,Task-871732-ALM
+
+#add by TCTNB.heng.chen 2016/01/08 qxdm for One Touch Feedback
+service tct_diag_mdlog /system/bin/diag_mdlog -t -f /data/data/com.tct.endusertest/Diag.cfg -o /sdcard/BugReport/diag_logs/ -c
+    disabled
+    oneshot
+    seclabel u:r:qlogd:s0
+service tct_kill_dm /system/bin/diag_mdlog -k
+    disabled
+    oneshot
+    seclabel u:r:qlogd:s0
+#add end TCTNB.heng.chen
+
+#[FEATURE]-ADD-BEGIN by TCTNB(heng.chen),12/23/2015,Task-1158191-ALM
+on property:tct.mdlog.enable=1
+    start tct_diag_mdlog
+
+on property:tct.mdlog.enable=0
+    start tct_kill_dm
+
+#[FEATURE]-ADD-END by TCTNB(heng.chen),12/23/2015,Task-1158191-ALM
+
+service tctd /system/bin/tctd
+    class core
+    socket tctd stream 0666 root root
+    seclabel u:r:tctd:s0
+
+service secsvr /system/bin/secsvr
+    class main
+    seclabel u:r:secsvr:s0
+
+on boot
+    write /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/fw_name PR1702898-s3528t_00260005_00380008.img
+    write /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/update_fw 1
+
+#FR-869647, Crash DUMP Flag Management
+on property:persist.sys.dload.enable=*
+    write /sys/module/msm_poweroff/parameters/download_mode ${persist.sys.dload.enable}
+
+#[FEATURE]-ADD-BEGIN by TCTNB(heng.chen),2016/1/17,Task-1275329-ALM,add for Feedback->crash->Tombstone Dumpable to control Tombstone Enable/Disable
+on property:persist.sys.tombstone.enable=*
+    write /proc/sys/fs/suid_dumpable ${persist.sys.tombstone.enable}
+#[FEATURE]-ADD-END by TCTNB(heng.chen),2016/1/17,Task-1275329-ALM
+
+#[FEATURE]-Add-BEGIN by TCTNB.zbb,11/6/2015,FR-861136,add nv restore after fota
+service restore_sfs /system/bin/restore_sfs
+    class late_start
+    oneshot
+    seclabel u:r:restore_sfs:s0
+#[FEATURE]-Add-END by TCTNB.zbb
+
+#[FEATURE]-Add-BEGIN by TCTSH.yanxi.liu, 2016/03/07, Defect-1749359, Upgrade traceability version for sugar & otu tools
+service up_ver /system/bin/up_ver
+    class late_start
+    oneshot
+    seclabel u:r:up_ver:s0
+#[FEATURE]-Add-END by TCTSH.yanxi.liu
