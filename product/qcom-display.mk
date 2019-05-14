@@ -5,7 +5,8 @@ PRODUCT_PACKAGES += \
     hwcomposer.msm8952 \
     lights.msm8952 \
     memtrack.msm8952 \
-    liboverlay
+    liboverlay \
+    libtinyxml
 
 # Permissions
 PRODUCT_COPY_FILES += \
