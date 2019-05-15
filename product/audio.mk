@@ -24,4 +24,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/mixer_paths_mtp.xml:/system/etc/mixer_paths_mtp.xml \
     $(LOCAL_PATH)/configs/media_profiles.xml:/system/etc/media_profiles.xml \
     $(LOCAL_PATH)/configs/media_codecs_performance.xml:/system/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_codecs.xml:/system/etc/media_codecs.xml
+    $(LOCAL_PATH)/configs/media_codecs.xml:/system/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/audio_policy.conf:/system/etc/audio_policy.conf \
+    $(LOCAL_PATH)/configs/audio_platform_info.xml:/system/etc/audio_platform_info.xml \
+    $(LOCAL_PATH)/configs/audio_effects.conf:/system/etc/audio_effects.conf

@@ -6,6 +6,7 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     audio.usb.default \
     audio_amplifier.msm8952 \
+    sound_trigger.primary.msm8916 \
     libaudio-resampler \
     libqcompostprocbundle \
     libqcomvisualizer \

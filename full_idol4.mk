@@ -25,5 +25,5 @@ $(call inherit-product, device/alcatel/idol4/device.mk)
 PRODUCT_DEVICE := idol4
 PRODUCT_NAME := full_idol4
 PRODUCT_BRAND := ALCATEL
-PRODUCT_MODEL := Idol 3
+PRODUCT_MODEL := 6055k
 PRODUCT_MANUFACTURER := ALCATEL ONETOUCH
