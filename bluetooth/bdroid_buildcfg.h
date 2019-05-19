@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The CyanogenMod Project <http://www.cyanogenmod.org>
+ * Copyright (C) 2017 The Lineage Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,13 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 
-#define BTM_DEF_LOCAL_NAME   "Idol 3 5.5"
 #define BLUETOOTH_QTI_SW TRUE
-#define BLE_VND_INCLUDED   TRUE
+
+#define BTM_DEF_LOCAL_NAME "Idol 4 6055"
+
+#define BLE_VND_INCLUDED TRUE
+#define BTA_DISABLE_DELAY 1000 /* in milliseconds */
+
+#define BTM_WBS_INCLUDED TRUE
+#define BTIF_HF_WBS_PREFERRED TRUE
 #endif
