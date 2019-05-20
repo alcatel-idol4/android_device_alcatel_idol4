@@ -195,6 +195,8 @@ on boot
     chmod 0644 /dev/oemfuse
     #Add-END by TCTNB.(shishun.liu)
 
+    symlink /data/
+
 service wcnss-service /system/bin/wcnss_service
     class main
     user system
