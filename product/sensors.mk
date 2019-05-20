@@ -5,8 +5,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/sensors/hals.conf:system/etc/sensors/hals.conf
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/sensors/calmodule.cfg:system/etc/sensors/calmodule.cfg
-PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/sensors/sensor_def_qcomdev.conf:system/etc/sensors/sensor_def_qcomdev.conf
 
 # Permissions

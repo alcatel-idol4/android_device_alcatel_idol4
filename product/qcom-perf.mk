@@ -9,8 +9,3 @@ PRODUCT_PACKAGES += \
 # Properties
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=libqti-perfd-client.so
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.power_ctrl=1 \
-    ro.min_freq_0=960000 \
-    ro.min_freq_4=800000
