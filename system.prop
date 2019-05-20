@@ -19,6 +19,9 @@ ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
 # Start in cdma mode
 
+# Bluetooth Fix
+qcom.bluetooth.soc=smd
+
 # [BUGFIX]-Mod-BEGIN by TCTNB.Dong.Jiang,09/18/2015,Task-571539
 # [BUGFIX]-Mod-END by TCTNB.Dong.Jiang
 
