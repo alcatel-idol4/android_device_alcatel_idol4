@@ -20,7 +20,9 @@ const char CameraParameters::KEY_ARCSOFT_SKIN_SOFTEN_LEVEL[] = "arcsoft-skin-sof
 const char CameraParameters::KEY_ARCSOFT_MODE[] = "arcsoft-mode"; \
 const char CameraParameters::KEY_ARCSOFT_SCENE_MODE[] = "arcsoft-scene"; \
 const char CameraParameters::KEY_TCT_TEST_DUAL_LED_VALUE[] = "test-dual-led-value"; \
-const char CameraParameters::KEY_TCT_FFF_ENABLE[] = "tct-fff-enable";
+const char CameraParameters::KEY_TCT_FFF_ENABLE[] = "tct-fff-enable"; \
+const char CameraParameters::KEY_TCT_EIS_ENABLE[] = "tct-eis-enable"; \
+const char CameraParameters::KEY_TCT_STOP_DISPLAY_VALUE[] = "tct-stop-display-value";
 
 #define CAMERA_PARAMETERS_EXTRA_H \
     static const char KEY_ARCSOFT_SKIN_BRIGHT_LEVEL[]; \
@@ -28,4 +30,6 @@ const char CameraParameters::KEY_TCT_FFF_ENABLE[] = "tct-fff-enable";
     static const char KEY_ARCSOFT_MODE[]; \
     static const char KEY_ARCSOFT_SCENE_MODE[]; \
     static const char KEY_TCT_TEST_DUAL_LED_VALUE[]; \
-    static const char KEY_TCT_FFF_ENABLE[];
+    static const char KEY_TCT_FFF_ENABLE[]; \
+    static const char KEY_TCT_EIS_ENABLE[]; \
+    static const char KEY_TCT_STOP_DISPLAY_VALUE[];
