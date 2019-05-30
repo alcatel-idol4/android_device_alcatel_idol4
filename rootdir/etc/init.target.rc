@@ -19,9 +19,10 @@ on fs
 
     mount_all fstab.qcom
 
-    # Keeping following partitions outside fstab file. As user may not have
-    # these partition flashed on the device. Failure to mount any partition in fstab file
-    # results in failure to launch late-start class.
+    # remove /data/camera and /data/misc/ camera folders to fix detecting for front camera
+    rmdir /data/camera
+    rmdir /data/misc/cameraserver
+    rmdir /data/misc/camera
 
 #bootprof add by gtguo for defect 1398221
     write /proc/bootprof "init.target.rc:Mount_END"
@@ -50,6 +51,7 @@ on post-fs-data
     write /proc/bootprof "init.target.rc:on_post_fs_data_end"
 
 #start camera server as daemon
+#TODO we want this to be oneshot as our camera fails over and over again when the daemon crashes once...
 service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
     user camera
