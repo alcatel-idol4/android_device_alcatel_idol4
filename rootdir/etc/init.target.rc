@@ -23,6 +23,8 @@ on fs
     rmdir /data/camera
     rmdir /data/misc/cameraserver
     rmdir /data/misc/camera
+    rmdir /data/data/org.cyanogenmod.snap
+    rmdir /data/user_de/0/org.cyanogenmod.snap
 
 #bootprof add by gtguo for defect 1398221
     write /proc/bootprof "init.target.rc:Mount_END"
@@ -54,8 +56,9 @@ on post-fs-data
 #TODO we want this to be oneshot as our camera fails over and over again when the daemon crashes once...
 service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
-    user camera
+    user root
     group camera system inet input graphics
+    disabled
 
 on init
    write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
