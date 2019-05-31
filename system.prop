@@ -222,7 +222,8 @@ ro.sys.fw.trim_empty_percent=100
 ro.sys.fw.trim_cache_percent=100
 ro.sys.fw.trim_enable_memory=2147483648
 
-#Optimal dex2oat threads for faster app installation
+# Optimal dex2oat threads for faster app installation
+# 4 is enough no need for 8 pythonlimited
 ro.sys.fw.dex2oat_thread_count=4
 
 # set cutoff voltage to 3200mV
@@ -307,7 +308,8 @@ persist.ims.enableADBLogs=1
 persist.ims.enableDebugLogs=1
 persist.radio.redir_party_num=0
 def.tctfw.brandMode.name=alcatel IDOL 4
-ro.kernel.nfc.enable=true
+# NOPE crashes everything :)
+#ro.kernel.nfc.enable=true
 ro.telephony.default_network=9
 persist.radio.mns_with_all_rat=0
 persist.radio.apm_sim_not_pwdn=1

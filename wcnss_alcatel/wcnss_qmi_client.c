@@ -29,6 +29,7 @@
 int wcnss_init_qmi(void)
 {
     /* empty */
+    ALOGE("%s: X", __func__);
     return SUCCESS;
 }
 
@@ -54,10 +55,12 @@ int wcnss_qmi_get_wlan_address(unsigned char *mac)
     }
 
     fclose(f);
+    ALOGE("%s: ret %d, mac '%s'", __func__, SUCCESS, mac);
     return SUCCESS;
 }
 
 void wcnss_qmi_deinit(void)
 {
     /* empty */
+    ALOGE("%s: X", __func__);
 }
