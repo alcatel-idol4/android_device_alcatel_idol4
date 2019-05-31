@@ -292,35 +292,3 @@ persist.debug.sensors.hal=1
 debug.qualcomm.sns.daemon=1
 debug.qualcomm.sns.libsensor1=1
 #[TASK]-ADD-END by TCTSH.CYJ, task-1822482, 2016/03/16, add sensor hal log for all idol4 projects, not only idol4s
-
-ro.tct.acdb.operator=
-persist.bt.low.power=0
-persist.wcnss.nv.bin.type=0
-persist.radio.hotspot.support=0
-persist.data.iwlan.enable=FALSE
-persist.radio.VT_ENABLE=0
-persist.radio.VOLTE_ENABLE=FALSE
-persist.radio.domain.ps=FALSE
-persist.radio.calls.on.ims=TRUE
-persist.radio.vrte_logic=1
-persist.radio.jbims=1
-persist.ims.enableADBLogs=1
-persist.ims.enableDebugLogs=1
-persist.radio.redir_party_num=0
-def.tctfw.brandMode.name=alcatel IDOL 4
-# NOPE crashes everything :)
-#ro.kernel.nfc.enable=true
-ro.telephony.default_network=9
-persist.radio.mns_with_all_rat=0
-persist.radio.apm_sim_not_pwdn=1
-persist.data_netmgrd_mtu=1440
-feature.tct.drm.enabled=true
-def.tct.drm.cd.enabled=true
-def.tct.drm.sd.enabled=true
-persist.sys.tct_sar.enabled=0
-ro.bluetooth.name=alcatel IDOL 4
-ro.bluetooth.name.telcel=AlCATEL Idol 4
-persist.sys.softap.wps.enable=false
-persist.dpm.feature=7
-persist.dpm.config.file=0
-ro.kernel.diag.enable=true
