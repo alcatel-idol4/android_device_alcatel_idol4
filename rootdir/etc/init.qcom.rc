@@ -191,7 +191,6 @@ on post-fs-data
     mkdir /data/misc/qsee 0770 system system
 
     # we will remap this as /mnt/sdcard with the sdcard fuse tool
-    mkdir /data/misc/camera 0777 camera camera
 
     mkdir /data/misc/ipa 0700 net_admin net_admin
 
@@ -275,9 +274,6 @@ on post-fs-data
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
-    #Create folder for mm-qcamera-daemon
-    mkdir /data/camera 0777 media camera
-
     #Create PERFD deamon related dirs
     mkdir /data/misc/perfd 0755 root system
     chmod 2755 /data/misc/perfd
@@ -304,6 +300,11 @@ on post-fs-data
     #Create FM dir for patchdownloader
     mkdir /data/misc/fm 0770 system system
     chmod 0770 /data/misc/fm
+
+    #Create folder for mm-qcamera-daemon
+    mkdir /data/camera 0777 media camera
+
+    mkdir /data/misc/camera 0777 camera camera
 
     # start cameraserver after fix
     start qcamerasvr
