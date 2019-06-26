@@ -79,9 +79,9 @@ void init_alarm_boot_properties()
          * 8 -> KPDPWR_N pin toggled (power key pressed)
          */
         if (buf[0] == '3')
-            property_set("ro.alarm_boot", "true");
+            property_override("ro.alarm_boot", "true");
         else
-            property_set("ro.alarm_boot", "false");
+            property_override("ro.alarm_boot", "false");
     }
 }
 
@@ -91,24 +91,92 @@ void common_properties()
         property_set("ro.build.product", "idol4");
 }
 
-void dualsim_properties(char const multisim_config[])
+void single_sim_properties()
 {
-    property_set("persist.radio.multisim.config", multisim_config);
+    property_override("persist.dpm.feature", "7");
+    property_override("persist.dpm.config.file", "0");
+    property_override("persist.radio.apm_sim_not_pwdn", "1");
+    property_override("persist.data.iwlan.enable", "false");
+    property_override("persist.radio.VT_ENABLE", "0");
+    property_override("persist.radio.calls.on.ims", "true");
+    property_override("persist.radio.vrte_logic", "1");
+    property_override("persist.radio.jbims", "1");
+    property_override("ro.telephony.default_network", "9");
+    property_override("persist.radio.multisim.config", "single");
 }
 
-void gsm_properties(char const default_network[])
+void clientid_properties()
 {
-    property_set("ro.telephony.default_network", default_network);
+    property_override("ro.com.google.clientidbase", "android-alcatel");
+    property_override("ro.com.google.clientidbase.ms", "android-alcatel");
+    property_override("ro.com.google.clientidbase.gmm", "android-alcatel");
+    property_override("ro.com.google.clientidbase.am", "android-alcatel");
+    property_override("ro.com.google.clientidbase.yt", "android-alcatel");
 }
 
 void vendor_load_properties()
 {
-        common_properties();
-        dualsim_properties("dsds");
-        gsm_properties("10");
-        property_set("ro.build.fingerprint", "TCL/6055K/idol4:6.0.1/MMB29M/v1AKZ-0:user/release-keys");
-        property_set("ro.build.description", "idol4-user 6.0.1 MMB29M v1AKZ-0 release-keys");
-        property_set("ro.product.model", "TCL i806");
+	
+    std::string device = property_get("ro.cm.device");
+    if (device != "idol4")
+        return;
+	
+    std::string curef_version = property_get("ro.lineage.curef");
+    
+    // 6055U (Cricket USA)
+    if (curef_version == "6055U") {
+        property_override("ro.build.fingerprint", "TCL/Alcatel_6055U/idol4:6.0.1/MMB29M/vCCJ-0:user/release-keys");
+        property_override("ro.build.description", "idol452_voltecricket-user 6.0.1 MMB29M vCCJ-0 release-keys");
+        property_override("ro.product.model", "Alcatel 6055U");
+        property_override("ro.product.name", "Alcatel_6055U");
+        property_override("persist.debug.wfd.enable", "0");
+        property_override("persist.hwc.enable_vds", "0");
+        property_override("persist.data_netmgrd_mtu", "1420");
+        property_override("ro.com.google.clientidbase", "android-alcatel");
+        property_override("ro.com.google.clientidbase.ms", "android-att-aio-us");
+        property_override("ro.com.google.clientidbase.gmm", "android-alcatel");
+        property_override("ro.com.google.clientidbase.am", "android-att-aio-us");
+        property_override("ro.com.google.clientidbase.yt", "android-alcatel");
+        single_sim_properties();
+		common_properties();
+    // 6055B (Mexico)
+    } else if (curef_version == "6055B") {
+        property_override("ro.build.fingerprint", "TCL/6055B/idol4:6.0.1/MMB29M/v1AJW-0:user/release-keys");
+        property_override("ro.build.description", "idol4-user 6.0.1 MMB29M v1AJW-0 release-keys");
+        property_override("ro.product.model", "6055B");
+        property_override("ro.product.name", "6055B");
+        property_override("persist.debug.wfd.enable", "1");
+        property_override("persist.hwc.enable_vds", "1");
+        property_override("persist.data_netmgrd_mtu", "1440");
+        single_sim_properties();
+        clientid_properties();
+		common_properties();
+    // 6055P (UK)
+    } else if (curef_version == "6055P") {
+        property_override("ro.build.fingerprint", "TCL/6055P/idol4:6.0.1/MMB29M/v1AKZ-0:user/release-keys");
+        property_override("ro.build.description", "idol4-user 6.0.1 MMB29M v1AKZ-0 release-keys");
+        property_override("ro.product.model", "6055P");
+        property_override("ro.product.name", "6055P");
+        property_override("persist.debug.wfd.enable", "1");
+        property_override("persist.hwc.enable_vds", "1");
+        property_override("persist.data_netmgrd_mtu", "1440");
+        single_sim_properties();
+        clientid_properties();
+		common_properties();
+    // If not found default to 6055K (Dual sim)
+    } else {
+        property_override("ro.telephony.default_network", "10");
+        property_override("persist.radio.multisim.config", "dsds");
+        property_override("ro.build.fingerprint", "TCL/6055K/idol4:6.0.1/MMB29M/v1AKZ-0:user/release-keys");
+        property_override("ro.build.description", "idol4-user 6.0.1 MMB29M v1AKZ-0 release-keys");
+        property_override("ro.product.model", "6055K");
+        property_override("ro.product.name", "6055K");
+        property_override("persist.debug.wfd.enable", "1");
+        property_override("persist.hwc.enable_vds", "1");
+        property_override("persist.data_netmgrd_mtu", "1440");
+        clientid_properties();
+		common_properties();
+    }
 
     init_alarm_boot_properties();
 }

@@ -185,6 +185,8 @@ on boot
     chown radio radio /data/misc/radio/copy_complete
     chmod 0660 /data/misc/radio/copy_complete
 
+	start set_variant
+
 # msm specific files that need to be created on /data
 on post-fs-data
     # Create directory for TZ Apps
@@ -1041,3 +1043,8 @@ service LKCore-rel /system/vendor/bin/LKCore
 
 on property:vold.decrypt=trigger_restart_min_framework
     start time_daemon
+
+service set_variant /system/bin/sh /init.tct.variant.sh
+    class core
+    user root
+    oneshot
