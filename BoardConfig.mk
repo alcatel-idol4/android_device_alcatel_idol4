@@ -20,7 +20,7 @@ TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 # Properties
 TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
 
-TARGET_OTA_ASSERT_DEVICE := idol4_6055k
+TARGET_OTA_ASSERT_DEVICE := idol4_6055k,idol452_voltecricket
 
 include device/alcatel/idol4/board/*.mk
 
