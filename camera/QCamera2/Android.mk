@@ -4,15 +4,8 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_CLANG_CFLAGS += \
-        -Wno-error=unused-private-field \
-        -Wno-error=strlcpy-strlcat-size \
-        -Wno-error=gnu-designator \
-        -Wno-error=unused-variable \
-	-Wno-error=format \
-	-Wno-error=tautological-pointer-compare \
-	-Wno-error=unused-parameter \
-	-Wno-error=unused-label
+LOCAL_COPY_HEADERS_TO := qcom/camera
+LOCAL_COPY_HEADERS := QCameraFormat.h
 
 LOCAL_SRC_FILES := \
         util/QCameraCmdThread.cpp \
@@ -47,30 +40,29 @@ LOCAL_SRC_FILES += \
 LOCAL_CFLAGS := -Wall -Wextra -Werror
 LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS
 
+#use media extension
+ifeq ($(TARGET_USES_MEDIA_EXTENSIONS), true)
+LOCAL_CFLAGS += -DUSE_MEDIA_EXTENSIONS
+endif
+
 #HAL 1.0 Flags
 LOCAL_CFLAGS += -DDEFAULT_DENOISE_MODE_ON -DHAL3
 
 LOCAL_C_INCLUDES := \
+        $(LOCAL_PATH)/stack/common \
+        frameworks/native/include/media/hardware \
+        frameworks/native/include/media/openmax \
+        hardware/qcom/media-caf/msm8952/libstagefrighthw \
+        system/media/camera/include \
         $(LOCAL_PATH)/../mm-image-codec/qexif \
         $(LOCAL_PATH)/../mm-image-codec/qomx_core \
-        $(LOCAL_PATH)/include \
-        $(LOCAL_PATH)/stack/common \
-        $(LOCAL_PATH)/stack/common/leak \
-        $(LOCAL_PATH)/stack/mm-camera-interface/inc \
         $(LOCAL_PATH)/util \
-        $(LOCAL_PATH)/HAL3 \
-        hardware/libhardware/include/hardware \
-	hardware/qcom/display-caf/msm8952/libqservice \
-        hardware/qcom/media-caf/msm8952/libstagefrighthw \
-        hardware/qcom/media-caf/msm8952/mm-core/inc \
-        system/core/include/cutils \
-        system/core/include/system \
-	system/media/camera/include/system \
+        hardware/qcom/media-caf/msm8952/mm-core/inc
 
 #HAL 1.0 Include paths
 LOCAL_C_INCLUDES += \
         frameworks/native/include/media/hardware \
-        $(LOCAL_PATH)/HAL
+        device/alcatel/idol4/camera/QCamera2/HAL
 
 ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
 LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
@@ -95,13 +87,15 @@ endif
 LOCAL_C_INCLUDES += \
         $(TARGET_OUT_HEADERS)/qcom/display
 LOCAL_C_INCLUDES += \
-        hardware/qcom/display/libqservice
+        hardware/qcom/display-caf/msm8952/libqservice
 LOCAL_SHARED_LIBRARIES := libcamera_client liblog libhardware libutils libcutils libdl
 LOCAL_SHARED_LIBRARIES += libmmcamera_interface libmmjpeg_interface libui libcamera_metadata
 LOCAL_SHARED_LIBRARIES += libqdMetaData libqservice libbinder
 ifeq ($(TARGET_TS_MAKEUP),true)
 LOCAL_SHARED_LIBRARIES += libts_face_beautify_hal libts_detected_face_hal
 endif
+
+LOCAL_CLANG := false
 
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)

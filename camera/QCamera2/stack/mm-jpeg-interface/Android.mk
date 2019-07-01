@@ -9,9 +9,6 @@ LOCAL_CFLAGS+= -D_ANDROID_
 
 LOCAL_CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
 
-LOCAL_CLANG_CFLAGS += \
-        -Wno-error=uninitialized
-
 LOCAL_C_INCLUDES+= $(kernel_includes)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(common_deps)
 
