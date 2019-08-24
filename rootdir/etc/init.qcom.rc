@@ -863,6 +863,12 @@ service hcidump /system/bin/sh /system/etc/hcidump.sh
     disabled
     oneshot
 
+service camera_init /system/bin/sh /system/etc/init.camera.sh
+    user root
+    group root camera media system
+    disabled
+    oneshot
+
 service charger /sbin/healthd -c
     class charger
     critical

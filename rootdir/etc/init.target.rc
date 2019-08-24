@@ -20,11 +20,7 @@ on fs
     mount_all fstab.qcom
 
     # remove /data/camera and /data/misc/ camera folders to fix detecting for front camera
-    rmdir /data/camera
-    rmdir /data/misc/cameraserver
-    rmdir /data/misc/camera
-    rmdir /data/data/org.cyanogenmod.snap
-    rmdir /data/user_de/0/org.cyanogenmod.snap
+    start camera_init
 
 #bootprof add by gtguo for defect 1398221
     write /proc/bootprof "init.target.rc:Mount_END"
