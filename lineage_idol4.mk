@@ -12,6 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_idol4.mk
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+
+# Inherit from idol4 device
+$(call inherit-product, device/alcatel/idol4/device.mk)
+
+# Device identifier. This must come after all inclusions
+PRODUCT_DEVICE := idol4
+PRODUCT_NAME := lineage_idol4
+PRODUCT_BRAND := ALCATEL
+PRODUCT_MODEL := 6055k
+PRODUCT_MANUFACTURER := ALCATEL ONETOUCH
