@@ -60,7 +60,7 @@ ifeq ($(HOST_OS),linux)
 endif
 
 # Boot animation
-TARGET_BOOTANIMATION_HALF_RES := true
+TARGET_BOOTANIMATION_HALF_RES := false
 
 #Enable HW based full disk encryption
 TARGET_HW_DISK_ENCRYPTION := false
@@ -74,10 +74,10 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 11053800448
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
-BOARD_HARDWARE_CLASS += \
-    hardware/cyanogen/cmhw \
-    device/alcatel/idol4/cmhw
-BOARD_USES_CYANOGEN_HARDWARE := true
+
+TARGET_ALLOW_LEGACY_AIDS := true
+TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
+
 # Init
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 BOARD_KERNEL_BASE := 0x80000000
@@ -86,17 +86,20 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
 BOARD_RAMDISK_OFFSET     := 0x01000000
 TARGET_KERNEL_SOURCE := kernel/alcatel/idol4
-TARGET_KERNEL_APPEND_DTB := true
 TARGET_KERNEL_CONFIG := lineageos_idol4_defconfig
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
+
 # Lights
-TARGET_PROVIDES_LIBLIGHT := true
+TARGET_PROVIDES_LIBLIGHT := false
+
 # Malloc
 MALLOC_SVELTE := true
+
+# AUDIO
 TARGET_USES_QCOM_MM_AUDIO := true
 AUDIO_FEATURE_ENABLED_HW_ACCELERATED_EFFECTS := false
 DTS_CODEC_M_ := true
@@ -225,7 +228,7 @@ USE_SENSOR_MULTI_HAL := true
 
 # SELinux
 BOARD_SEPOLICY_DIRS += device/alcatel/idol4/sepolicy
--include device/qcom/sepolicy/legacy-sepolicy.mk # we launched with 6.0.1 so yes legacy
+-include device/qcom/sepolicy/sepolicy.mk
 
 # TWRP
 TW_THEME := portrait_hdpi

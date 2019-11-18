@@ -22,4 +22,8 @@ LOCAL_C_INCLUDES := system/core/init
 LOCAL_SRC_FILES := init_idol4.cpp
 LOCAL_MODULE := libinit_idol4
 
+LOCAL_STATIC_LIBRARIES := \
+	libbase \
+	libselinux
+
 include $(BUILD_STATIC_LIBRARY)
