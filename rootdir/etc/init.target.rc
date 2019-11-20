@@ -15,6 +15,8 @@ on fs
     #bootprof add by gtguo for defect 1398221
     write /proc/bootprof "init.target.rc:Mount_START"
 
+    wait /dev/block/platform/soc.0/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc.0/${ro.boot.bootdevice} /dev/block/bootdevice
     wait /dev/block/bootdevice
 
     mount_all fstab.qcom
