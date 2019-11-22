@@ -30,14 +30,20 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/etc/permissions/com.dsi.ant.antradio_library.xml
 
-# Keymaster
+# Keymaster HAL
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
     android.hardware.keymaster@3.0-service
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-service
+    android.hardware.light@2.0-impl \
+    android.hardware.light@2.0-service \
+    lights.msm8952
+
+# LiveDisplay native
+PRODUCT_PACKAGES += \
+    vendor.lineage.livedisplay@1.0-service
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -198,7 +204,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
+    android.hardware.camera.provider@2.4-service \
+    camera.device@3.2-impl \
+    camera.msm8952 \
+    libmm-qcamera \
     Snap
+
+# HIDL
+PRODUCT_PACKAGES += \
+    android.hidl.base@1.0 \
+    android.hidl.manager@1.0
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -224,7 +239,10 @@ PRODUCT_PACKAGES += \
     gralloc.msm8952 \
     hwcomposer.msm8952 \
     memtrack.msm8952 \
+    libdisplayconfig \
     liboverlay \
+    libqdMetaData.system \
+    libgenlock \
     libtinyxml
 
 # Permissions
@@ -289,6 +307,10 @@ PRODUCT_PACKAGES += \
     libOmxVdecHevc
 endif
 
+# Configstore
+PRODUCT_PACKAGES += \
+    android.hardware.configstore@1.0-service
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml
 
@@ -296,10 +318,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/msm_irqbalance.conf:system/vendor/etc/msm_irqbalance.conf
 
-# Power HAL
+# Power
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-service-qti \
-    power.msm8952
+    android.hardware.power@1.0-service-qti
 
 # Properties
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -320,6 +341,7 @@ PRODUCT_COPY_FILES += \
 
 # Seccomp
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp/configstore@1.0.policy:system/vendor/etc/seccomp_policy/configstore@1.0.policy \
     $(LOCAL_PATH)/seccomp/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy \
     $(LOCAL_PATH)/seccomp/mediaextractor.policy:system/vendor/etc/seccomp_policy/mediaextractor.policy
 
@@ -339,6 +361,7 @@ PRODUCT_PACKAGES += \
 
 # Vibrator
 PRODUCT_PACKAGES += \
+    android.hardware.vibrator@1.0-impl \
     android.hardware.vibrator@1.0-service
 
 # RIL
@@ -369,14 +392,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Wifi
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
+    libcld80211 \
     libqsap_sdk \
     libQWiFiSoftApCfg \
-    libwcnss_qmi \
-    wcnss_service
-
-PRODUCT_PACKAGES += \
-    dhcpcd.conf \
+    libwpa_client \
     hostapd \
+    dhcpcd.conf \
+    wificond \
     wpa_supplicant \
     wpa_supplicant.conf
 
@@ -390,10 +412,6 @@ PRODUCT_COPY_FILES += \
 # Recovery Script
 PRODUCT_PACKAGES += \
     init.recovery.qcom.rc
-
-# Sensors
-PRODUCT_PACKAGES += \
-    sensors.msm8952
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/sensors/hals.conf:system/etc/sensors/hals.conf
