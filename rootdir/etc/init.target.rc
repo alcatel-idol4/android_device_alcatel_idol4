@@ -120,22 +120,20 @@ service seempd /system/bin/seempd
    socket seempdw dgram 0666 system system
    oneshot
 
-service thermal-engine /system/vendor/bin/thermal-engine
-   class main
-   user root
-   socket thermal-send-client stream 0666 system system
-#[FEATURE]-Add-BEGIN by TCTSH.jhyu, 10/23/2016, defect-3573338
-   socket thermal-recv-client stream 0666 system system
-#[FEATURE]-Add-END by TCTSH.jhyu, 10/23/2016, defect-3573338
-   socket thermal-recv-passive-client stream 0666 system system
-   group root
+service thermal-engine /system/bin/thermal-engine
+    class main
+    user system
+    group root system
+    socket thermal-send-client stream 0666 system system
+    socket thermal-recv-client stream 0660 system system
+    socket thermal-recv-passive-client stream 0666 system system
+    writepid /dev/cpuset/system-background/tasks
 
 service time_daemon /system/bin/time_daemon
-# [PLATFORM]-Add-BEGIN by TCTCD.liyue, start time-daemon after mount userdata, Defect-1048043, 2015/12/7
-   class late_start
-# [PLATFORM]-Add-END by TCTCD.liyue
-   user root
-   group root
+    class late_start
+    user root
+    group root
+    writepid /dev/cpuset/system-background/tasks
 
 service audiod /system/bin/audiod
    class late_start
@@ -201,8 +199,8 @@ on boot
     # for fwpath
     chmod 0666 /sys/module/wlan/parameters/fwpath
 
-service wcnss-service /system/bin/wcnss_service
-    class main
+service wcnss-service /system/vendor/bin/wcnss_service
+    class late_start
     user system
     group system wifi radio
     oneshot
