@@ -343,7 +343,8 @@ PRODUCT_COPY_FILES += \
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
-    android.hardware.sensors@1.0-service
+    android.hardware.sensors@1.0-service \
+    sensors.msm8952
 
 # Thermal
 PRODUCT_PACKAGES += \
@@ -411,6 +412,10 @@ PRODUCT_COPY_FILES += \
 # Recovery Script
 PRODUCT_PACKAGES += \
     init.recovery.qcom.rc
+
+PRODUCT_PACKAGES += \
+    calmodule.cfg
+
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/sensors/hals.conf:system/etc/sensors/hals.conf

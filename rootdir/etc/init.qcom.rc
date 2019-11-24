@@ -60,6 +60,9 @@ on early-boot
     exec u:r:qti_init_shell:s0 -- /init.qcom.early_boot.sh
 
 on boot
+    chmod 777 /dev/diag
+    chown system radio /dev/diag
+
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
@@ -301,6 +304,16 @@ on post-fs-data
     mkdir /persist/sensors 0775 system system
     chmod 664 /persist/sensors/sensors_settings
     chown system root /persist/sensors/sensors_settings
+
+    chmod 777 /dev/input/event0
+    chmod 777 /dev/input/event1
+    chmod 777 /dev/input/event2
+    chmod 777 /dev/input/event3
+    chmod 777 /dev/input/event4
+    chmod 777 /dev/input/event5
+    chmod 777 /dev/input/event6
+    chmod 777 /dev/input/event7
+    chmod 777 /dev/input/event8
 
     # RIDL data
     mkdir /data/misc/SelfHost/ 0710 system shell
@@ -550,7 +563,7 @@ service qmiproxy /system/bin/qmiproxy
 service qmuxd /system/bin/qmuxd
     class main
     user root
-    group radio audio bluetooth gps nfc qcom_diag
+    group radio audio bluetooth gps nfc qcom_diag sensors
     disabled
 
 service netmgrd /system/bin/netmgrd
@@ -572,7 +585,7 @@ service ipacm /system/bin/ipacm
 
 service qti /system/vendor/bin/qti
     class main
-    user radio
+    user root
     group radio net_raw qcom_diag usb net_admin
     disabled
 

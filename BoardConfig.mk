@@ -223,9 +223,6 @@ WIFI_DRIVER_FW_PATH_STA     := "sta"
 # Recovery
 TARGET_RECOVERY_FSTAB := device/alcatel/idol4/rootdir/etc/recovery.fstab
 
-# Sensors
-USE_SENSOR_MULTI_HAL := true
-
 # SELinux
 BOARD_SEPOLICY_DIRS += device/alcatel/idol4/sepolicy
 -include device/qcom/sepolicy/sepolicy.mk
