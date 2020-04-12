@@ -28,8 +28,3 @@
 #
 #
 
-rm -rf /data/camera
-rm -rf /data/misc/cameraserver
-rm -rf /data/misc/camera
-rm -rf /data/data/org.cyanogenmod.snap
-rm -rf /data/user_de/0/org.cyanogenmod.snap

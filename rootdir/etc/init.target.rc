@@ -19,9 +19,6 @@ on fs
 
     mount_all fstab.qcom
 
-    # remove /data/camera and /data/misc/ camera folders to fix detecting for front camera
-    start camera_init
-
 #bootprof add by gtguo for defect 1398221
     write /proc/bootprof "init.target.rc:Mount_END"
 

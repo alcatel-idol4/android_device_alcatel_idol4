@@ -70,6 +70,11 @@ media.aac_51_output_enabled=true
 media.camera.ts.monotic=0
 persist.camera.HAL3.enabled=1
 
+#[EDIT] BEGIN enable full logging 09/04/2020 (DD/MM/YYYY) Leonardo.meitz@computacenter.com
+persist.camera.global.debug=6
+persist.camera.sensor.debug=6
+#[EDIT] END Leonardo.meitz@computacenter.com
+
 #codecs:(PARSER_)AAC AC3 AMR_NB AMR_WB ASF AVI DTS FLV 3GP 3G2 MKV MP2PS MP2TS MP3 OGG QCP WAV FLAC AIFF APE
 mm.enable.qcom_parser=1048303
 
