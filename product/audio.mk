@@ -1,6 +1,5 @@
 # Audio
 PRODUCT_PACKAGES += \
-    audio_amplifier.msm8952 \
     audio.a2dp.default \
     audio.r_submix.default \
     audio.usb.default \
@@ -24,3 +23,11 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_platform_info.xml:/system/etc/audio_platform_info.xml \
     $(LOCAL_PATH)/configs/audio_effects.conf:/system/etc/audio_effects.conf \
     $(LOCAL_PATH)/configs/capability.xml:/system/etc/capability.xml
+    
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/permissions/cneapiclient.xml:/system/etc/permissions/cneapiclient.xml \
+    $(LOCAL_PATH)/configs/permissions/qcnvitems.xml:/system/etc/permissions/qcnvitems.xml \
+    $(LOCAL_PATH)/configs/permissions/qcrilhook.xml:/system/etc/permissions/qcrilhook.xml \
+    $(LOCAL_PATH)/configs/permissions/qti_permissions.xml:/system/etc/permissions/qti_permissions.xml \
+    $(LOCAL_PATH)/configs/cne/andsfCne.xml:system/etc/cne/andsfCne.xml \
+    $(LOCAL_PATH)/configs/cne/SwimConfig.xml:system/etc/cne/SwimConfig.xml
