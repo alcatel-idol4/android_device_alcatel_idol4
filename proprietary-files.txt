@@ -700,6 +700,9 @@ etc/firmware/leia_pm4_470.fw
 bin/gatekeeperd
 vendor/lib64/hw/gatekeeper.msm8952.so
 
+# Keystore
+vendor/lib/hw/keystore.msm8952.so
+
 # RTP
 vendor/lib/lib-rtpcommon.so
 vendor/lib/lib-rtpcore.so
