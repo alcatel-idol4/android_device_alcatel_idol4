@@ -14,6 +14,8 @@ vendor/lib/libaudioparsers.so
 vendor/lib/libaudioalsa.so
 vendor/lib64/libaudioparsers.so
 vendor/lib64/libaudioalsa.so
+vendor/lib/libhwdaphal.so
+vendor/lib64/libhwdaphal.so
 etc/acdbdata/QRD/QRD_Speaker_cal.acdb
 etc/acdbdata/QRD/msm8976-skun-snd-card/QRD_SKUN_Hdmi_cal.acdb
 etc/acdbdata/QRD/msm8976-skun-snd-card/QRD_SKUN_Global_cal.acdb
@@ -49,18 +51,6 @@ etc/acdbdata/MTP/msm8976-tasha-snd-card/MTP_WCD9335_Handset_cal.acdb
 etc/acdbdata/MTP/msm8976-tasha-snd-card/MTP_WCD9335_General_cal.acdb
 etc/acdbdata/MTP/MTP_Hdmi_cal.acdb
 etc/acdbdata/MTP/MTP_Speaker_cal.acdb
-
-# Audio effects
-lib/soundfx/libeffectproxy.so
-lib/soundfx/libdownmix.so
-lib/soundfx/libvisualizer.so
-lib/soundfx/libqcomvoiceprocessing.so
-lib/soundfx/libqcompostprocbundle.so
-lib/soundfx/libqcomvisualizer.so
-lib/soundfx/libaudiopreprocessing.so
-lib/soundfx/libbundlewrapper.so
-lib/soundfx/libreverbwrapper.so
-lib/soundfx/libldnhncr.so
 
 # Audio adsp
 bin/adsprpcd
@@ -99,9 +89,7 @@ vendor/lib/libactuator_ad5816g.so
 # Bluetooth
 bin/btnvtool
 bin/hci_qcomm_init
-vendor/lib/libbt-vendor.so
 vendor/lib/libbtnv.so
-vendor/lib64/libbt-vendor.so
 vendor/lib64/libbtnv.so
 
 # Camera
@@ -649,7 +637,6 @@ vendor/lib64/libscale.so
 # DPM
 etc/permissions/com.qti.dpmframework.xml
 etc/permissions/dpmapi.xml
-etc/dpm/nsrm
 etc/dpm/nsrm/NsrmConfiguration.xml
 etc/dpm/dpm.conf
 vendor/lib/libdpmtcm.so
@@ -662,27 +649,23 @@ vendor/lib64/libdpmfdmgr.so
 vendor/lib64/libdpmctmgr.so
 vendor/lib64/libdpmnsrm.so
 vendor/lib64/libdpmframework.so
-framework/dpm.jar
 framework/com.qti.dpmframework.jar
 framework/dpmapi.jar
 bin/dpmd
-bin/dpm
 priv-app/dpmserviceapp/dpmserviceapp.apk
 
 # DRM
 bin/qseecomd
+vendor/lib/libQSEEComAPI.so
+vendor/lib64/libQSEEComAPI.so
 vendor/lib/libdrmtime.so
-vendor/lib/mediadrm/libdrmclearkeyplugin.so
 vendor/lib/libdrmfs.so
 vendor/lib/drm/libdrmprplugin.so
 vendor/lib64/libdrmtime.so
-vendor/lib64/mediadrm/libdrmclearkeyplugin.so
 vendor/lib64/libdrmfs.so
 
 # Crypto
 lib64/libcryptfs_hw.so
-lib/libcrypto.so
-lib64/libcrypto.so
 vendor/lib/libFidoCrypto.so
 vendor/lib/libFidoCryptoJNI.so
 vendor/lib64/libFidoCrypto.so
@@ -697,8 +680,7 @@ etc/firmware/leia_pfp_470.fw
 etc/firmware/leia_pm4_470.fw
 
 # Gatekeeper
-bin/gatekeeperd
-vendor/lib64/hw/gatekeeper.msm8952.so
+vendor/lib64/hw/gatekeeperd.msm8952.so
 
 # Keystore
 vendor/lib/hw/keystore.msm8952.so
@@ -720,7 +702,6 @@ etc/permissions/com.qualcomm.location.vzw_library.xml
 etc/permissions/com.qti.location.sdk.xml
 etc/permissions/com.qualcomm.location.xml
 framework/com.qualcomm.location.vzw_library.jar
-framework/com.android.location.provider.jar
 framework/com.qti.location.sdk.jar
 lib/libloc_core.so
 lib/libloc_ds_api.so
@@ -730,6 +711,8 @@ lib64/libloc_core.so
 lib64/libloc_ds_api.so
 lib64/libloc_eng.so
 lib64/libloc_api_v02.so
+lib/libgps.utils.so
+lib64/libgps.utils.so
 lib/hw/gps.default.so
 lib64/hw/gps.default.so
 vendor/lib/hw/flp.default.so
@@ -778,50 +761,50 @@ etc/firmware/a530_pfp.fw
 etc/firmware/a530_pm4.fw
 
 # Graphics
-system/vendor/lib64/egl/eglSubDriverAndroid
-system/vendor/lib64/egl/libEGL_adreno
-system/vendor/lib64/egl/libGLESv1_CM_adreno
-system/vendor/lib64/egl/libGLESv2_adreno
-system/vendor/lib64/egl/libQTapGLES
-system/vendor/lib64/egl/libq3dtools_adreno
-system/vendor/lib64/hw/vulkan.msm8952
-system/vendor/lib64/libC2D2
-system/vendor/lib64/libCB
-system/vendor/lib64/libOpenCL
-system/vendor/lib64/libRSDriver_adreno
-system/vendor/lib64/libadreno_utils
-system/vendor/lib64/libc2d30-a3xx
-system/vendor/lib64/libc2d30-a4xx
-system/vendor/lib64/libc2d30-a5xx
-system/vendor/lib64/libgsl
-system/vendor/lib64/libllvm-glnext
-system/vendor/lib64/libllvm-qcom
-system/vendor/lib64/libllvm-qgl
-system/vendor/lib64/librs_adreno
-system/vendor/lib64/librs_adreno_sha1.so
-system/vendor/lib64/libscale.so
-system/vendor/lib/egl/eglSubDriverAndroid
-system/vendor/lib/egl/libEGL_adreno
-system/vendor/lib/egl/libGLESv1_CM_adreno
-system/vendor/lib/egl/libGLESv2_adreno
-system/vendor/lib/egl/libQTapGLES
-system/vendor/lib/egl/libq3dtools_adreno
-system/vendor/lib/hw/vulkan.msm8952
-system/vendor/lib/libC2D2
-system/vendor/lib/libCB
-system/vendor/lib/libOpenCL
-system/vendor/lib/libRSDriver_adreno
-system/vendor/lib/libadreno_utils
-system/vendor/lib/libc2d30-a3xx
-system/vendor/lib/libc2d30-a4xx
-system/vendor/lib/libc2d30-a5xx
-system/vendor/lib/libgsl
-system/vendor/lib/libllvm-glnext
-system/vendor/lib/libllvm-qcom
-system/vendor/lib/libllvm-qgl
-system/vendor/lib/librs_adreno
-system/vendor/lib/librs_adreno_sha1
-system/vendor/lib/libscale.so
+vendor/lib64/egl/eglSubDriverAndroid.so
+vendor/lib64/egl/libEGL_adreno.so
+vendor/lib64/egl/libGLESv1_CM_adreno.so
+vendor/lib64/egl/libGLESv2_adreno.so
+vendor/lib64/egl/libQTapGLES.so
+vendor/lib64/egl/libq3dtools_adreno.so
+vendor/lib64/hw/vulkan.msm8952.so
+vendor/lib64/libC2D2.so
+vendor/lib64/libCB.so
+vendor/lib64/libOpenCL.so
+vendor/lib64/libRSDriver_adreno.so
+vendor/lib64/libadreno_utils.so
+vendor/lib64/libc2d30-a3xx.so
+vendor/lib64/libc2d30-a4xx.so
+vendor/lib64/libc2d30-a5xx.so
+vendor/lib64/libgsl.so
+vendor/lib64/libllvm-glnext.so
+vendor/lib64/libllvm-qcom.so
+vendor/lib64/libllvm-qgl.so
+vendor/lib64/librs_adreno.so
+vendor/lib64/librs_adreno_sha1.so
+vendor/lib64/libscale.so
+vendor/lib/egl/eglSubDriverAndroid.so
+vendor/lib/egl/libEGL_adreno.so
+vendor/lib/egl/libGLESv1_CM_adreno.so
+vendor/lib/egl/libGLESv2_adreno.so
+vendor/lib/egl/libQTapGLES.so
+vendor/lib/egl/libq3dtools_adreno.so
+vendor/lib/hw/vulkan.msm8952.so
+vendor/lib/libC2D2.so
+vendor/lib/libCB.so
+vendor/lib/libOpenCL.so
+vendor/lib/libRSDriver_adreno.so
+vendor/lib/libadreno_utils.so
+vendor/lib/libc2d30-a3xx.so
+vendor/lib/libc2d30-a4xx.so
+vendor/lib/libc2d30-a5xx.so
+vendor/lib/libgsl.so
+vendor/lib/libllvm-glnext.so
+vendor/lib/libllvm-qcom.so
+vendor/lib/libllvm-qgl.so
+vendor/lib/librs_adreno.so
+vendor/lib/librs_adreno_sha1.so
+vendor/lib/libscale.so
 
 # IMS
 bin/imscmservice
@@ -830,7 +813,6 @@ bin/imsdatadaemon
 bin/ims_rtp_daemon
 etc/permissions/imscm.xml
 framework/rcsimssettings.jar
-framework/ims-common.jar
 framework/imscmlibrary.jar
 vendor/lib/libNimsWrap.so
 vendor/lib/lib-rcsimssjni.so
@@ -866,12 +848,10 @@ vendor/lib64/lib-imsdpl.so
 vendor/lib64/libimsmedia_jni.so
 
 # IPA
-bin/ipacm
 bin/ipacm-diag
+lib64/libdhcpcd.so
 
 # Media / OMX
-lib/libmm-omxcore.so
-lib64/libmm-omxcore.so
 vendor/lib/libjpegdhw.so
 vendor/lib/libjpegdmahw.so
 vendor/lib/libjpegehw.so
@@ -968,7 +948,6 @@ bin/port-bridge
 etc/permissions/qti_permissions.xml
 lib/libqti_performance.so
 lib64/libqti_performance.so
-lib64/libnetfilter_conntrack.so
 vendor/bin/qti
 vendor/lib/libmmiipstreammmihttp.so
 vendor/lib/libmmi.so
@@ -1003,6 +982,11 @@ vendor/lib/libril-qc-qmi-1.so
 vendor/lib64/libril-qcril-hook-oem.so
 vendor/lib64/libril-qc-qmi-1.so
 framework/qcrilhook.jar
+vendor/lib/libdiag.so
+vendor/lib64/libdiag.so
+vendor/lib64/libdiagbridge.so
+vendor/lib/libDiagService.so
+vendor/lib64/libDiagService.so
 vendor/lib/libqmi_common_so.so
 vendor/lib/libqmi_client_qmux.so
 vendor/lib/libqmi_cci.so
@@ -1046,8 +1030,6 @@ bin/netmgrd
 # Wifi
 bin/hal_proxy_daemon
 bin/cnss-daemon
-lib/libwifi-hal-qcom.so
-lib64/libwifi-hal-qcom.so
 
 # Peripherals
 bin/pm-service
@@ -1121,7 +1103,5 @@ etc/firmware/venus.mbn
 etc/firmware/venus.mdt
 
 # XML
-lib64/libtinyxml.so
-lib/libtinyxml.so
 vendor/lib/libxml.so
 vendor/lib64/libxml.so
