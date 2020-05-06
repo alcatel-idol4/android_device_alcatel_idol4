@@ -102,7 +102,7 @@ bin/hci_qcomm_init
 vendor/lib/libbt-vendor.so
 vendor/lib/libbtnv.so
 vendor/lib64/libbt-vendor.so
-vendor/lib64/libbtnv.s
+vendor/lib64/libbtnv.so
 
 # Camera
 bin/mm-qcamera-daemon
@@ -773,6 +773,52 @@ etc/firmware/a420_pfp.fw
 etc/firmware/a420_pm4.fw
 etc/firmware/a530_pfp.fw
 etc/firmware/a530_pm4.fw
+
+# Graphics
+system/vendor/lib64/egl/eglSubDriverAndroid
+system/vendor/lib64/egl/libEGL_adreno
+system/vendor/lib64/egl/libGLESv1_CM_adreno
+system/vendor/lib64/egl/libGLESv2_adreno
+system/vendor/lib64/egl/libQTapGLES
+system/vendor/lib64/egl/libq3dtools_adreno
+system/vendor/lib64/hw/vulkan.msm8952
+system/vendor/lib64/libC2D2
+system/vendor/lib64/libCB
+system/vendor/lib64/libOpenCL
+system/vendor/lib64/libRSDriver_adreno
+system/vendor/lib64/libadreno_utils
+system/vendor/lib64/libc2d30-a3xx
+system/vendor/lib64/libc2d30-a4xx
+system/vendor/lib64/libc2d30-a5xx
+system/vendor/lib64/libgsl
+system/vendor/lib64/libllvm-glnext
+system/vendor/lib64/libllvm-qcom
+system/vendor/lib64/libllvm-qgl
+system/vendor/lib64/librs_adreno
+system/vendor/lib64/librs_adreno_sha1.so
+system/vendor/lib64/libscale.so
+system/vendor/lib/egl/eglSubDriverAndroid
+system/vendor/lib/egl/libEGL_adreno
+system/vendor/lib/egl/libGLESv1_CM_adreno
+system/vendor/lib/egl/libGLESv2_adreno
+system/vendor/lib/egl/libQTapGLES
+system/vendor/lib/egl/libq3dtools_adreno
+system/vendor/lib/hw/vulkan.msm8952
+system/vendor/lib/libC2D2
+system/vendor/lib/libCB
+system/vendor/lib/libOpenCL
+system/vendor/lib/libRSDriver_adreno
+system/vendor/lib/libadreno_utils
+system/vendor/lib/libc2d30-a3xx
+system/vendor/lib/libc2d30-a4xx
+system/vendor/lib/libc2d30-a5xx
+system/vendor/lib/libgsl
+system/vendor/lib/libllvm-glnext
+system/vendor/lib/libllvm-qcom
+system/vendor/lib/libllvm-qgl
+system/vendor/lib/librs_adreno
+system/vendor/lib/librs_adreno_sha1
+system/vendor/lib/libscale.so
 
 # IMS
 bin/imscmservice
