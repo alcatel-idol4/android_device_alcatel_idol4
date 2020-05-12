@@ -5167,9 +5167,6 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     bool limitedDevice = false;
     int64_t m_MinDurationBoundNs = 50000000; // 50 ms, 20 fps
     char prop[PROPERTY_VALUE_MAX];
-    
-    ALOGE("cameraId(%d)", cameraId);
-    
     /* If sensor is YUV sensor (no raw support) or if per-frame control is not
      * guaranteed or if min fps of max resolution is less than 20 fps, its
      * advertised as limited device*/
@@ -5258,13 +5255,8 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_SENSOR_BLACK_LEVEL_PATTERN,
             gCamCapability[cameraId]->black_level_pattern, BLACK_LEVEL_PATTERN_CNT);
 
-    ALOGE("custom flash_charge_duration BEGIN");
-    gCamCapability[cameraId]->flash_charge_duration = 0;
-    ALOGE("flash_charge_duration(%lld)", gCamCapability[cameraId]->flash_charge_duration);
     staticInfo.update(ANDROID_FLASH_INFO_CHARGE_DURATION,
                       &gCamCapability[cameraId]->flash_charge_duration, 1);
-                      
-    ALOGE("custom flash_charge_duration END");
 
     staticInfo.update(ANDROID_TONEMAP_MAX_CURVE_POINTS,
                       &gCamCapability[cameraId]->max_tone_map_curve_points, 1);
@@ -5671,40 +5663,24 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
                       avail_awb_modes,
                       size);
 
-    ALOGE("custom flash levels BEGIN");
-    
-    count = 11;
-    uint8_t available_flash_levels[CAM_FLASH_FIRING_LEVEL_MAX] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    uint8_t flashAvailable = ANDROID_FLASH_INFO_AVAILABLE_TRUE;
-    
-    staticInfo.update(ANDROID_FLASH_FIRING_POWER, available_flash_levels, count);
-    staticInfo.update(ANDROID_FLASH_INFO_AVAILABLE, &flashAvailable, 1);
-    ALOGE("custom flash levels END");
-    
-    #if 0
-    uint8_t my_flash_levels[CAM_FLASH_FIRING_LEVEL_MAX];
     uint8_t available_flash_levels[CAM_FLASH_FIRING_LEVEL_MAX];
     count = CAM_FLASH_FIRING_LEVEL_MAX;
     count = MIN(gCamCapability[cameraId]->supported_flash_firing_level_cnt,
             count);
-    ALOGE("cound(%d)", count);
     for (size_t i = 0; i < count; i++) {
         available_flash_levels[i] =
                 gCamCapability[cameraId]->supported_firing_levels[i];
-        ALOGE("flash_levels[i] (%d)", available_flash_levels[i]);
     }
     staticInfo.update(ANDROID_FLASH_FIRING_POWER,
             available_flash_levels, count);
 
     uint8_t flashAvailable;
-    if (gCamCapability[cameraId]->flash_available) {
+    if (gCamCapability[cameraId]->flash_available)
         flashAvailable = ANDROID_FLASH_INFO_AVAILABLE_TRUE;
-        ALOGE("flash is available");
-    }
-    else {
+    else
         flashAvailable = ANDROID_FLASH_INFO_AVAILABLE_FALSE;
-    }
-    #endif
+    staticInfo.update(ANDROID_FLASH_INFO_AVAILABLE,
+            &flashAvailable, 1);
 
     Vector<uint8_t> avail_ae_modes;
     count = CAM_AE_MODE_MAX;
