@@ -236,8 +236,6 @@ _________________________________________________________________
             <Feature name="adaptive-playback" />
             <Limit name="concurrent-instances" max="8" />
         </MediaCodec>
-        <!--[BUGFIX]-BEGIN by TCTNB.Qiancheng.Zhao,07/12/2015,1050335,disable wma,wmv-->
-         <!--
         <MediaCodec name="OMX.qcom.video.decoder.wmv" type="video/x-ms-wmv" >
             <Quirk name="requires-allocate-on-input-ports" />
             <Quirk name="requires-allocate-on-output-ports" />
@@ -284,7 +282,6 @@ _________________________________________________________________
             <Feature name="secure-playback" required="true" />
             <Limit name="concurrent-instances" max="7" />
         </MediaCodec>
-        -->
         <MediaCodec name="OMX.qcom.video.decoder.divx" type="video/divx" >
             <Quirk name="requires-allocate-on-input-ports" />
             <Quirk name="requires-allocate-on-output-ports" />
