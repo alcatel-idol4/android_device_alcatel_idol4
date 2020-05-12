@@ -4,6 +4,16 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
+LOCAL_CLANG_CFLAGS += \
+        -Wno-error=unused-private-field \
+        -Wno-error=strlcpy-strlcat-size \
+        -Wno-error=gnu-designator \
+        -Wno-error=unused-variable \
+	-Wno-error=format \
+	-Wno-error=tautological-pointer-compare \
+	-Wno-error=unused-parameter \
+	-Wno-error=unused-label
+
 LOCAL_SRC_FILES := \
         util/QCameraCmdThread.cpp \
         util/QCameraQueue.cpp \
@@ -41,20 +51,26 @@ LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS
 LOCAL_CFLAGS += -DDEFAULT_DENOISE_MODE_ON -DHAL3
 
 LOCAL_C_INCLUDES := \
-        $(LOCAL_PATH)/stack/common \
-        frameworks/native/include/media/hardware \
-        frameworks/native/include/media/openmax \
-        hardware/qcom/media/libstagefrighthw \
-        system/media/camera/include \
         $(LOCAL_PATH)/../mm-image-codec/qexif \
         $(LOCAL_PATH)/../mm-image-codec/qomx_core \
+        $(LOCAL_PATH)/include \
+        $(LOCAL_PATH)/stack/common \
+        $(LOCAL_PATH)/stack/common/leak \
+        $(LOCAL_PATH)/stack/mm-camera-interface/inc \
         $(LOCAL_PATH)/util \
-        hardware/qcom/media/mm-core/inc \
+        $(LOCAL_PATH)/HAL3 \
+        hardware/libhardware/include/hardware \
+	hardware/qcom/display-caf/msm8952/libqservice \
+        hardware/qcom/media-caf/msm8952/libstagefrighthw \
+        hardware/qcom/media-caf/msm8952/mm-core/inc \
+        system/core/include/cutils \
+        system/core/include/system \
+	system/media/camera/include/system \
 
 #HAL 1.0 Include paths
 LOCAL_C_INCLUDES += \
         frameworks/native/include/media/hardware \
-        hardware/qcom/camera/QCamera2/HAL
+        $(LOCAL_PATH)/HAL
 
 ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
 LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include

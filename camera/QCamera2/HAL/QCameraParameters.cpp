@@ -5791,6 +5791,116 @@ int32_t QCameraParameters::allocate()
     return rc;
 }
 
+#define CAM0_PIC_TBL_SIZE 20
+static cam_dimension_t new_pic_sizes_cam0[CAM0_PIC_TBL_SIZE] = {
+    {4160, 3120},
+    {4160, 2340},
+    {4000, 3000},
+    {4096, 2160},
+    {3200, 2400},
+    {3200, 1800},
+    {2592, 1944},
+    {2048, 1536},
+    {1920, 1080},
+    {1600, 1200},
+    {1280, 960},
+    {1280, 768},
+    {1280, 720},
+    {1024, 768},
+    {800, 600},
+    {800, 480},
+    {720, 480},
+    {640, 480},
+    {352, 288},
+    {320, 240}
+};
+
+#define CAM0_VID_TBL_SIZE 13
+static cam_dimension_t new_vid_sizes_cam0[CAM0_VID_TBL_SIZE] = {
+    {3840, 2160},
+    {2560, 1440},
+    {1920, 1080},
+    {1280, 960},
+    {1280, 720},
+    {800, 480},
+    {720, 480},
+    {640, 480},
+    {480, 320},
+    {352, 288},
+    {320, 240},
+    {176, 144},
+    {160, 120}
+};
+
+#define CAM0_PRVW_TBL_SIZE 15
+static cam_dimension_t new_prvw_sizes_cam0[CAM0_PRVW_TBL_SIZE] = {
+    {3840, 2160},
+    {2560, 1440},
+    {1920, 1080},
+    {1440, 1080},
+    {1280, 960},
+    {1280, 720},
+    {864, 480},
+    {800, 480},
+    {768, 432},
+    {720, 480},
+    {640, 480},
+    {576, 432},
+    {480, 320},
+    {384, 288},
+    {320, 240}
+};
+
+#define CAM1_VID_TBL_SIZE 11
+static cam_dimension_t new_vid_sizes_cam1[CAM1_VID_TBL_SIZE] = {
+    {2560, 1440},
+    {1920, 1080},
+    {1280, 720},
+    {864, 480},
+    {800, 480},
+    {720, 480},
+    {640, 480},
+    {480, 320},
+    {352, 288},
+    {320, 240},
+    {176, 144}
+};
+
+#define CAM1_PRVW_TBL_SIZE 13
+static cam_dimension_t new_prvw_sizes_cam1[CAM1_PRVW_TBL_SIZE] = {
+    {2560, 1440},
+    {1920, 1080},
+    {1440, 1080},
+    {1280, 960},
+    {1280, 720},
+    {864, 480},
+    {800, 480},
+    {768, 432},
+    {720, 480},
+    {640, 480},
+    {576, 432},
+    {480, 320},
+    {320, 240}
+};
+
+#define CAM1_PIC_TBL_SIZE 14
+static cam_dimension_t new_pic_sizes_cam1[CAM1_PIC_TBL_SIZE] = {
+    {3264, 2448},
+    {2560, 1440},
+    {1920, 1080},
+    {1440, 1080},
+    {1280, 960},
+    {1280, 720},
+    {864, 480},
+    {800, 480},
+    {768, 432},
+    {720, 480},
+    {640, 480},
+    {576, 432},
+    {480, 320},
+    {320, 240}
+};
+
 /*===========================================================================
  * FUNCTION   : init
  *
@@ -5810,6 +5920,58 @@ int32_t QCameraParameters::init(cam_capability_t *capabilities,
         mm_camera_vtbl_t *mmOps, QCameraAdjustFPS *adjustFPS)
 {
     int32_t rc = NO_ERROR;
+    int i, x;
+
+#if 0
+
+    // Inject modified video/preview size tables
+    if (capabilities->position == CAM_POSITION_BACK) {
+        for (i = 0; i < CAM0_PIC_TBL_SIZE; i++)
+            capabilities->picture_sizes_tbl[i] = new_pic_sizes_cam0[i];
+        capabilities->picture_sizes_tbl_cnt = CAM0_PIC_TBL_SIZE;
+
+        for (i = 0; i < CAM0_VID_TBL_SIZE; i++)
+            capabilities->video_sizes_tbl[i] = new_vid_sizes_cam0[i];
+        capabilities->video_sizes_tbl_cnt = CAM0_VID_TBL_SIZE;
+
+        for (i = 0; i < CAM0_VID_TBL_SIZE; i++)
+            capabilities->livesnapshot_sizes_tbl[i] = new_vid_sizes_cam0[i];
+        capabilities->livesnapshot_sizes_tbl_cnt = CAM0_VID_TBL_SIZE;
+
+        for (i = 0; i < CAM0_PRVW_TBL_SIZE; i++)
+            capabilities->preview_sizes_tbl[i] = new_prvw_sizes_cam0[i];
+        capabilities->preview_sizes_tbl_cnt = CAM0_PRVW_TBL_SIZE;
+
+        // Add 90FPS HFR mode up to 720p
+        x = CAM_HFR_MODE_90FPS;
+        capabilities->hfr_tbl[x].mode = (cam_hfr_mode_t)x;
+        capabilities->hfr_tbl[x].dim = (cam_dimension_t){1280, 720};
+        capabilities->hfr_tbl[x].frame_skip = 0;
+        capabilities->hfr_tbl[x].livesnapshot_sizes_tbl_cnt =
+                                        capabilities->hfr_tbl[CAM_HFR_MODE_120FPS].livesnapshot_sizes_tbl_cnt;
+        for (i = 0; i < capabilities->hfr_tbl[x].livesnapshot_sizes_tbl_cnt; i++)
+            capabilities->hfr_tbl[x].livesnapshot_sizes_tbl[i] =
+                                        capabilities->hfr_tbl[CAM_HFR_MODE_60FPS].livesnapshot_sizes_tbl[i];
+        capabilities->hfr_tbl_cnt = 3;
+    } else if (capabilities->position == CAM_POSITION_FRONT) {
+        for (i = 0; i < CAM1_VID_TBL_SIZE; i++)
+            capabilities->video_sizes_tbl[i] = new_vid_sizes_cam1[i];
+        capabilities->video_sizes_tbl_cnt = CAM1_VID_TBL_SIZE;
+
+        for (i = 0; i < CAM1_PRVW_TBL_SIZE; i++)
+            capabilities->preview_sizes_tbl[i] = new_prvw_sizes_cam1[i];
+        capabilities->preview_sizes_tbl_cnt = CAM1_PRVW_TBL_SIZE;
+
+	for (i = 0; i < CAM1_PIC_TBL_SIZE; i++)
+            capabilities->picture_sizes_tbl[i] = new_pic_sizes_cam1[i];
+        capabilities->picture_sizes_tbl_cnt = CAM1_PIC_TBL_SIZE;
+
+        for (i = 0; i < CAM1_VID_TBL_SIZE; i++)
+            capabilities->livesnapshot_sizes_tbl[i] = new_vid_sizes_cam1[i];
+        capabilities->livesnapshot_sizes_tbl_cnt = CAM1_VID_TBL_SIZE;
+    }
+
+#endif
 
     m_pCapability = capabilities;
     m_pCamOpsTbl = mmOps;
@@ -6076,7 +6238,7 @@ int32_t QCameraParameters::adjustPreviewFpsRange(cam_fps_range_t *fpsRange)
 
     rc = commitSetBatch();
     if ( rc != NO_ERROR ) {
-        ALOGE("%s:Failed to commit batch parameters", __func__);
+        ALOGE("%s:Failed to commit batch parameters...", __func__);
         return rc;
     }
 
@@ -11400,6 +11562,8 @@ int32_t QCameraParameters::initBatchUpdate(parm_buffer_t *p_table)
  *==========================================================================*/
 int32_t QCameraParameters::commitSetBatch()
 {
+    int32_t retry = 0;
+entry:
     int32_t rc = NO_ERROR;
     int32_t i = 0;
 
@@ -11421,10 +11585,25 @@ int32_t QCameraParameters::commitSetBatch()
 
     if (i < CAM_INTF_PARM_MAX) {
         rc = m_pCamOpsTbl->ops->set_parms(m_pCamOpsTbl->camera_handle, m_pParamBuf);
+	ALOGE("%s: setting params", __func__);
     }
     if (rc == NO_ERROR) {
         // commit change from temp storage into param map
+	ALOGE("%s: commiting param changes", __func__);
         rc = commitParamChanges();
+    }
+
+    if (rc != NO_ERROR) {
+	// retry
+	if (retry > 10) {
+		// We failed :(
+		ALOGE("%s: failed to set_parms", __func__);
+		return rc;
+	}
+	ALOGE("%s: retrying setting param changes step %d", __func__, retry);
+	usleep(200000); // 200ms
+	retry++;
+	goto entry;
     }
     return rc;
 }

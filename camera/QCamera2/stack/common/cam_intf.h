@@ -811,6 +811,8 @@ typedef struct {
     INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_CPP,           cam_stream_crop_info_t,   1);
     INCLUDE(CAM_INTF_META_DCRF,                         cam_dcrf_result_t,        1);
 
+    INCLUDE(CAM_INTF_PARM_ALCATEL, 			uint64_t,		  1);
+
     /* HAL1 specific */
     /* read only */
     INCLUDE(CAM_INTF_PARM_QUERY_FLASH4SNAP,             int32_t,                     1);
