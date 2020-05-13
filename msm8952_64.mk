@@ -130,8 +130,7 @@ PRODUCT_PACKAGE_OVERLAYS := $(QCPATH)/qrdplus/Extension/res \
  PRODUCT_COPY_FILES += \
      device/qcom/msm8952_64/sensors/hals.conf:system/etc/sensors/hals.conf
 
-PRODUCT_SUPPORTS_VERITY := true
-PRODUCT_SYSTEM_VERITY_PARTITION := /dev/block/bootdevice/by-name/system
+PRODUCT_SUPPORTS_VERITY := false
 
 #for android_filesystem_config.h
 PRODUCT_PACKAGES += \
