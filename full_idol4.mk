@@ -22,7 +22,7 @@ $(call inherit-product, device/tcl/idol4/device.mk)
 
 # Device identifier. This must come after all inclusions
 TARGET_VENDOR := TCL
-PRODUCT_NAME := full_idol4
+PRODUCT_NAME := lineage_idol4
 PRODUCT_DEVICE := idol4
 PRODUCT_BRAND := Alcatel
 PRODUCT_MODEL := 6055K

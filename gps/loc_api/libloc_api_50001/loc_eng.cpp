@@ -47,19 +47,8 @@
 #include <new>
 #include <LocEngAdapter.h>
 
-#include <cutils/sched_policy.h>
-#ifndef USE_GLIB
-#include <utils/SystemClock.h>
-#include <utils/Log.h>
-#endif /* USE_GLIB */
-
-#ifdef USE_GLIB
-#include <glib.h>
-#include <sys/syscall.h>
-#endif /* USE_GLIB */
 
 #include <string.h>
-
 #include <loc_eng.h>
 #include <loc_eng_ni.h>
 #include <loc_eng_dmn_conn.h>
@@ -68,8 +57,7 @@
 #include <loc_eng_nmea.h>
 #include <msg_q.h>
 #include <loc.h>
-#include "log_util.h"
-#include "platform_lib_includes.h"
+#include <platform_lib_includes.h>
 #include "loc_core_log.h"
 #include "loc_eng_log.h"
 
@@ -112,6 +100,8 @@ static const loc_param_s_type gps_conf_table[] =
   {"XTRA_SERVER_2",                  &gps_conf.XTRA_SERVER_2,                  NULL, 's'},
   {"XTRA_SERVER_3",                  &gps_conf.XTRA_SERVER_3,                  NULL, 's'},
   {"USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL",  &gps_conf.USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL,          NULL, 'n'},
+  {"AGPS_CONFIG_INJECT",             &gps_conf.AGPS_CONFIG_INJECT,             NULL, 'n'},
+  {"EXTERNAL_DR_ENABLED",            &gps_conf.EXTERNAL_DR_ENABLED,                  NULL, 'n'},
 };
 
 static const loc_param_s_type sap_conf_table[] =
@@ -188,6 +178,9 @@ static void loc_default_parameters(void)
 
    /* None of the 10 slots for agps certificates are writable by default */
    gps_conf.AGPS_CERT_WRITABLE_MASK = 0;
+
+   /* inject supl config to modem with config values from config.xml or gps.conf, default 1 */
+   gps_conf.AGPS_CONFIG_INJECT = 1;
 }
 
 // 2nd half of init(), singled out for
@@ -416,7 +409,9 @@ struct LocEngSetServerIpv4 : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setServer(mNlAddr, mPort, mServerType);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setServer(mNlAddr, mPort, mServerType);
+        }
     }
     inline void locallog() const {
         LOC_LOGV("LocEngSetServerIpv4 - addr: %x, port: %d, type: %s",
@@ -447,7 +442,9 @@ struct LocEngSetServerUrl : public LocMsg {
         delete[] mUrl;
     }
     inline virtual void proc() const {
-        mAdapter->setServer(mUrl, mLen);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setServer(mUrl, mLen);
+        }
     }
     inline void locallog() const {
         LOC_LOGV("LocEngSetServerUrl - url: %s", mUrl);
@@ -468,7 +465,9 @@ struct LocEngAGlonassProtocol : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setAGLONASSProtocol(mAGlonassProtocl);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setAGLONASSProtocol(mAGlonassProtocl);
+        }
     }
     inline  void locallog() const {
         LOC_LOGV("A-GLONASS protocol: 0x%lx", mAGlonassProtocl);
@@ -512,7 +511,9 @@ struct LocEngSuplVer : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setSUPLVersion(mSuplVer);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setSUPLVersion(mSuplVer);
+        }
     }
     inline  void locallog() const {
         LOC_LOGV("SUPL Version: %d", mSuplVer);
@@ -523,15 +524,15 @@ struct LocEngSuplVer : public LocMsg {
 };
 
 struct LocEngSuplMode : public LocMsg {
-    UlpProxyBase* mUlp;
+    LocEngAdapter* mAdapter;
 
-    inline LocEngSuplMode(UlpProxyBase* ulp) :
-        LocMsg(), mUlp(ulp)
+    inline LocEngSuplMode(LocEngAdapter* adapter) :
+        LocMsg(), mAdapter(adapter)
     {
         locallog();
     }
     inline virtual void proc() const {
-        mUlp->setCapabilities(ContextBase::getCarrierCapabilities());
+        mAdapter->getUlpProxy()->setCapabilities(ContextBase::getCarrierCapabilities());
     }
     inline  void locallog() const {
     }
@@ -576,7 +577,9 @@ struct LocEngLppConfig : public LocMsg {
         locallog();
     }
     inline virtual void proc() const {
-        mAdapter->setLPPConfig(mLppConfig);
+        if (gps_conf.AGPS_CONFIG_INJECT) {
+            mAdapter->setLPPConfig(mLppConfig);
+        }
     }
     inline void locallog() const {
         LOC_LOGV("LocEngLppConfig - profile: %d", mLppConfig);
@@ -971,9 +974,9 @@ inline void LocEngReportStatus::log() const {
 //        case LOC_ENG_MSG_REPORT_NMEA:
 LocEngReportNmea::LocEngReportNmea(void* locEng,
                                    const char* data, int len) :
-    LocMsg(), mLocEng(locEng), mNmea(new char[len+1]), mLen(len)
+    LocMsg(), mLocEng(locEng), mNmea(new char[len]), mLen(len)
 {
-    strlcpy(mNmea, data, len+1);
+    memcpy((void*)mNmea, (void*)data, len);
     locallog();
 }
 void LocEngReportNmea::proc() const {
@@ -1679,29 +1682,6 @@ struct LocEngInstallAGpsCert : public LocMsg {
     }
 };
 
-struct LocEngUpdateRegistrationMask : public LocMsg {
-    loc_eng_data_s_type* mLocEng;
-    LOC_API_ADAPTER_EVENT_MASK_T mMask;
-    loc_registration_mask_status mIsEnabled;
-    inline LocEngUpdateRegistrationMask(loc_eng_data_s_type* locEng,
-                                        LOC_API_ADAPTER_EVENT_MASK_T mask,
-                                        loc_registration_mask_status isEnabled) :
-        LocMsg(), mLocEng(locEng), mMask(mask), mIsEnabled(isEnabled) {
-        locallog();
-    }
-    inline virtual void proc() const {
-        loc_eng_data_s_type *locEng = (loc_eng_data_s_type *)mLocEng;
-        locEng->adapter->updateRegistrationMask(mMask,
-                                                mIsEnabled);
-    }
-    void locallog() const {
-        LOC_LOGV("LocEngUpdateRegistrationMask\n");
-    }
-    virtual void log() const {
-        locallog();
-    }
-};
-
 struct LocEngGnssConstellationConfig : public LocMsg {
     LocEngAdapter* mAdapter;
     inline LocEngGnssConstellationConfig(LocEngAdapter* adapter) :
@@ -2242,6 +2222,9 @@ void loc_eng_delete_aiding_data(loc_eng_data_s_type &loc_eng_data, GpsAidingData
 {
     ENTRY_LOG_CALLFLOW();
     INIT_CHECK(loc_eng_data.adapter, return);
+
+    //report delete aiding data to ULP to send to DRPlugin
+    loc_eng_data.adapter->getUlpProxy()->reportDeleteAidingData(f);
 
     loc_eng_data.adapter->sendMsg(new LocEngDelAidData(&loc_eng_data, f));
 
@@ -2848,7 +2831,7 @@ void loc_eng_configuration_update (loc_eng_data_s_type &loc_eng_data,
                                                             gps_conf.A_GLONASS_POS_PROTOCOL_SELECT));
             }
             if (gps_conf_tmp.SUPL_MODE != gps_conf.SUPL_MODE) {
-                adapter->sendMsg(new LocEngSuplMode(adapter->getUlpProxy()));
+                adapter->sendMsg(new LocEngSuplMode(adapter));
             }
             // we always update lock mask, this is because if this is dsds device, we would not
             // know if modem has switched dds, if so, lock mask may also need to be updated.
@@ -2990,29 +2973,6 @@ void loc_eng_handle_engine_up(loc_eng_data_s_type &loc_eng_data)
     EXIT_LOG(%s, VOID_RET);
 }
 
-#ifdef USE_GLIB
-/*===========================================================================
-FUNCTION set_sched_policy
-
-DESCRIPTION
-   Local copy of this function which bypasses android set_sched_policy
-
-DEPENDENCIES
-   None
-
-RETURN VALUE
-   0
-
-SIDE EFFECTS
-   N/A
-
-===========================================================================*/
-static int set_sched_policy(int tid, SchedPolicy policy)
-{
-    return 0;
-}
-#endif /* USE_GLIB */
-
 /*===========================================================================
 FUNCTION    loc_eng_read_config
 
@@ -3082,10 +3042,7 @@ int loc_eng_gps_measurement_init(loc_eng_data_s_type &loc_eng_data,
 
     // updated the mask
     LOC_API_ADAPTER_EVENT_MASK_T event = LOC_API_ADAPTER_BIT_GNSS_MEASUREMENT;
-    loc_eng_data.adapter->sendMsg(new LocEngUpdateRegistrationMask(
-                                                        &loc_eng_data,
-                                                        event,
-                                                        LOC_REGISTRATION_MASK_ENABLED));
+    loc_eng_data.adapter->updateEvtMask(event, LOC_REGISTRATION_MASK_ENABLED);
     // set up the callback
     loc_eng_data.gnss_measurement_cb = callbacks->gnss_measurement_callback;
     LOC_LOGD ("%s, event masks updated successfully", __func__);
@@ -3117,10 +3074,7 @@ void loc_eng_gps_measurement_close(loc_eng_data_s_type &loc_eng_data)
 
     // updated the mask
     LOC_API_ADAPTER_EVENT_MASK_T event = LOC_API_ADAPTER_BIT_GNSS_MEASUREMENT;
-    loc_eng_data.adapter->sendMsg(new LocEngUpdateRegistrationMask(
-                                                          &loc_eng_data,
-                                                          event,
-                                                          LOC_REGISTRATION_MASK_DISABLED));
+    loc_eng_data.adapter->updateEvtMask(event, LOC_REGISTRATION_MASK_DISABLED);
     // set up the callback
     loc_eng_data.gnss_measurement_cb = NULL;
     EXIT_LOG(%d, 0);
