@@ -135,8 +135,11 @@ OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 TARGET_CONTINUOUS_SPLASH_ENABLED := true
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_ION := true
-TARGET_USES_NEW_ION_API := true
+TARGET_USES_NEW_ION_API :=true
 USE_OPENGL_RENDERER := true
+
+# Added to indicate that protobuf-c is supported in this build
+PROTOBUF_SUPPORTED := false
 
 # Filesystem
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
