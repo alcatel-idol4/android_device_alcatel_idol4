@@ -18,8 +18,8 @@
 
 set -e
 
-DEVICE=mido
-VENDOR=xiaomi
+DEVICE=idol4
+VENDOR=tcl
 
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"

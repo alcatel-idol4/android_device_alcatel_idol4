@@ -18,10 +18,10 @@
 
 set -e
 
-DEVICE=mido
-VENDOR=xiaomi
+DEVICE=idol4
+VENDOR=tcl
 
-INITIAL_COPYRIGHT_YEAR=2017
+INITIAL_COPYRIGHT_YEAR=2016
 
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
