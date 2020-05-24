@@ -70,6 +70,7 @@ etc/firmware/rampatch_tlv_2.1.tlv
 etc/firmware/rampatch_tlv_3.0.tlv
 etc/firmware/rampatch_tlv_3.2.tlv
 
+
 # CNE
 -priv-app/CNEService/CNEService.apk
 bin/cnd
@@ -300,6 +301,22 @@ etc/firmware/a420_pfp.fw
 etc/firmware/a420_pm4.fw
 etc/firmware/leia_pfp_470.fw
 etc/firmware/leia_pm4_470.fw
+
+# Venus firmware
+etc/firmware/venus.b01
+etc/firmware/venus-v1.mbn
+etc/firmware/venus-v1.b04
+etc/firmware/venus-v1.b03
+etc/firmware/venus.mbn
+etc/firmware/venus.mdt
+etc/firmware/venus.b04
+etc/firmware/venus-v1.mdt
+etc/firmware/venus-v1.b00
+etc/firmware/venus.b02
+etc/firmware/venus.b03
+etc/firmware/venus-v1.b02
+etc/firmware/venus-v1.b01
+etc/firmware/venus.b00
 
 # Listen
 vendor/lib/hw/sound_trigger.primary.msm8952.so

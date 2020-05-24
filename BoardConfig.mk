@@ -138,9 +138,6 @@ TARGET_USES_ION := true
 TARGET_USES_NEW_ION_API :=true
 USE_OPENGL_RENDERER := true
 
-# Added to indicate that protobuf-c is supported in this build
-PROTOBUF_SUPPORTED := false
-
 # Filesystem
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_USERIMAGES_USE_EXT4 := true
