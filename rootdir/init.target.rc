@@ -233,13 +233,13 @@ on property:init.svc.dts_configurator=stopped
 
 service per_mgr /system/bin/pm-service
     class core
-    user system
-    group system
+    user root
+    group system root
 
 service per_proxy /system/bin/pm-proxy
     class core
-    user system
-    group system
+    user root
+    group system root
     disabled
 
 on property:init.svc.per_mgr=running
