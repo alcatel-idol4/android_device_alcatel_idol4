@@ -95,6 +95,8 @@ telephony.lteOnCdmaDevice=1
 # System props for bluetooh
 # System prop to turn on hfp client
 bluetooth.hfp.client=1
+# Use SMD
+qcom.bluetooth.soc=smd
 
 #Simulate sdcard on /data/media
 #
@@ -203,6 +205,9 @@ ro.cutoff_voltage_mv=3200
 
 #set the debug configuration for 8956/76
 persist.debug.8976.config=true
+
+# use HAL3 by default
+persist.camera.HAL3.enabled=1
 
 #force HAL1 for below packages
 camera.hal1.packagelist=com.skype.raider,com.google.android.talk
