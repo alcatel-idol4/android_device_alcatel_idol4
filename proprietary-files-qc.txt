@@ -1,3 +1,5 @@
+# Everything pinned to LA.BR.1.3.6-05410-8976.0 unless described
+
 # ADSP
 bin/adsprpcd
 vendor/lib/libadsp_default_listener.so
