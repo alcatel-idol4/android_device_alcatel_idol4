@@ -398,6 +398,7 @@ bin/qmuxd
 etc/permissions/qti_permissions.xml
 vendor/lib/libSubSystemShutdown.so
 vendor/lib/libdiag.so
+vendor/lib/libconfigdb.so
 vendor/lib/libdsi_netctrl.so
 vendor/lib/libdsutils.so
 vendor/lib/libidl.so
@@ -415,6 +416,7 @@ vendor/lib/libqmiservices.so
 vendor/lib/libquipc_os_api.so
 vendor/lib/libsmemlog.so
 vendor/lib/libsubsystem_control.so
+vendor/lib64/libconfigdb.so
 vendor/lib64/libSubSystemShutdown.so
 vendor/lib64/libdiag.so
 vendor/lib64/libdsi_netctrl.so
