@@ -1,5 +1,3 @@
-# Everything pinned to LA.BR.1.3.6-05410-8976.0 unless described
-
 # ADSP
 bin/adsprpcd
 vendor/lib/libadsp_default_listener.so
@@ -102,14 +100,12 @@ framework/com.quicinc.cne.jar
 vendor/lib/libcne.so
 vendor/lib/libcneapiclient.so
 vendor/lib/libcneqmiutils.so
-vendor/lib/libcneapiclient.so
 vendor/lib/libvendorconn.so
 vendor/lib/libwqe.so
 vendor/lib/libxml.so
 vendor/lib64/libcne.so
 vendor/lib64/libcneapiclient.so
 vendor/lib64/libcneqmiutils.so
-vendor/lib64/libcneapiclient.so
 vendor/lib64/libvendorconn.so
 vendor/lib64/libwqe.so
 vendor/lib64/libxml.so
@@ -392,17 +388,20 @@ vendor/bin/mm-pp-daemon
 vendor/lib/libdisp-aba.so
 vendor/lib64/libdisp-aba.so
 
-# QMI - pinned to stock
+# QMI
 bin/irsc_util
 bin/qmuxd
 etc/permissions/qti_permissions.xml
 vendor/lib/libSubSystemShutdown.so
+vendor/lib/libDiagService.so
+vendor/lib/libdatactrl.so
 vendor/lib/libdiag.so
-vendor/lib/libconfigdb.so
+vendor/lib/libdiagbridge.so
 vendor/lib/libdsi_netctrl.so
 vendor/lib/libdsutils.so
 vendor/lib/libidl.so
 vendor/lib/libqcci_legacy.so
+vendor/lib/libqcmaputils.so
 vendor/lib/libqdi.so
 vendor/lib/libqdp.so
 vendor/lib/libqmi.so
@@ -416,9 +415,11 @@ vendor/lib/libqmiservices.so
 vendor/lib/libquipc_os_api.so
 vendor/lib/libsmemlog.so
 vendor/lib/libsubsystem_control.so
-vendor/lib64/libconfigdb.so
 vendor/lib64/libSubSystemShutdown.so
+vendor/lib64/libDiagService.so
+vendor/lib64/libdatactrl.so
 vendor/lib64/libdiag.so
+vendor/lib64/libdiagbridge.so
 vendor/lib64/libdsi_netctrl.so
 vendor/lib64/libdsutils.so
 vendor/lib64/libidl.so
@@ -438,8 +439,10 @@ vendor/lib64/libquipc_os_api.so
 vendor/lib64/libsmemlog.so
 vendor/lib64/libsubsystem_control.so
 
-# Radio - pinned to stock
+# Radio
 -app/QtiTelephonyService/QtiTelephonyService.apk
+-app/datastatusnotification/datastatusnotification.apk
+-app/embms/embms.apk
 -app/fastdormancy/fastdormancy.apk
 -app/shutdownlistener/shutdownlistener.apk
 bin/netmgrd
@@ -449,26 +452,45 @@ bin/rmt_storage
 bin/tftp_server
 etc/data/dsi_config.xml
 etc/data/netmgr_config.xml
+etc/data/qmi_config.xml
+etc/permissions/embms.xml
 etc/permissions/qcrilhook.xml
 etc/permissions/telephonyservice.xml
+framework/QtiTelephonyServicelibrary.jar
 framework/embmslibrary.jar
 -framework/qcrilhook.jar
 framework/qti-telephony-common.jar
 -priv-app/qcrilmsgtunnel/qcrilmsgtunnel.apk
 vendor/bin/qti
+vendor/lib/lib_remote_simlock.so
 vendor/lib/liblqe.so
+vendor/lib/libconfigdb.so
 vendor/lib/libmdmdetect.so
 vendor/lib/libnetmgr.so
+vendor/lib/libsystem_health_mon.so
+vendor/lib/libsettings.so
+vendor/lib/libprotobuf-cpp-qril.so
+vendor/lib64/libril-qc-ltedirectdisc.so
 vendor/lib64/libril-qc-qmi-1.so
+vendor/lib64/libril-qc-radioconfig.so
 vendor/lib64/libril-qcril-hook-oem.so
+vendor/lib/librilqmiservices.so
+vendor/lib64/lib_remote_simlock.so
+vendor/lib64/libconfigdb.so
 vendor/lib64/liblqe.so
 vendor/lib64/libmdmdetect.so
 vendor/lib64/libnetmgr.so
+vendor/lib64/libril-qc-ltedirectdisc.so
 vendor/lib64/libril-qc-qmi-1.so
+vendor/lib64/libril-qc-radioconfig.so
+vendor/lib64/libril-qcril-hook-oem.so
+vendor/lib64/librilqmiservices.so
+vendor/lib64/libsettings.so
+vendor/lib64/libprotobuf-cpp-qril.so
 vendor/lib64/libsystem_health_mon.so
 vendor/qcril.db
 
-# Radio - IMS - pinned to stock
+# Radio - IMS
 bin/ims_rtp_daemon
 bin/imscmservice
 bin/imsdatadaemon
@@ -476,8 +498,8 @@ bin/imsqmidaemon
 etc/permissions/imscm.xml
 framework/imscmlibrary.jar
 framework/rcsimssettings.jar
-#-vendor/app/ims/ims.apk
-#-vendor/app/imssettings/imssettings.apk
+-vendor/app/ims/ims.apk
+-vendor/app/imssettings/imssettings.apk
 vendor/lib64/lib-dplmedia.so
 vendor/lib64/lib-ims-rcscmjni.so
 vendor/lib64/lib-imsSDP.so
